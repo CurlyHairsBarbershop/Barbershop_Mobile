@@ -128,10 +128,11 @@
 
 // main.dart
 
-import 'package:curly_hairs/screens/guest_screens/guest_home_screen.dart';
+import 'package:curly_hairs/screens/splash_screen.dart';
 import 'package:curly_hairs/utils/material_color_generator.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+// import 'package:curly_hairs/screens/guest_screens/guest_home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -144,7 +145,7 @@ void main() async {
       theme: ThemeData(
         primarySwatch: customColorSwatch,
       ),
-      home: GuestHomeScreen(),
+      home: SplashScreen(),
     ),
   );
 }
