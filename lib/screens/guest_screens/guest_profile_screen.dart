@@ -1,5 +1,7 @@
+import 'package:curly_hairs/screens/authentication_screens/login_screen.dart';
+import 'package:curly_hairs/screens/authentication_screens/register_screen.dart';
 import 'package:flutter/material.dart';
-// import 'package:straight_whiskey_mobile/screens/role_section_screen.dart'; // for debugging purposes
+// import 'package:curly_hairs/screens/role_section_screen.dart'; // for debugging purposes
 
 class GuestProfileScreen extends StatelessWidget {
   @override
@@ -30,18 +32,38 @@ class GuestProfileScreen extends StatelessWidget {
           //     // navigate to Explore Haircuts screen
           //   },
           // ),
+          // ListTile(
+          //   leading: Icon(Icons.login),
+          //   title: Text('Log In'),
+          //   onTap: () {
+          //     // handle log in
+          //   },
+          // ),
+          // ListTile(
+          //   leading: Icon(Icons.app_registration),
+          //   title: Text('Register'),
+          //   onTap: () {
+          //     // handle registration
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.login),
             title: Text('Log In'),
             onTap: () {
-              // handle log in
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
             },
           ),
           ListTile(
-            leading: Icon(Icons.app_registration),
+            leading: Icon(Icons.person_add),
             title: Text('Register'),
             onTap: () {
-              // handle registration
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RegisterScreen()),
+              );
             },
           ),
           // for debugging purposes

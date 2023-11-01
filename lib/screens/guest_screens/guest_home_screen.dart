@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:curly_hairs/screens/guest_screens/guest_profile_screen.dart';
-// import 'package:straight_whiskey_mobile/pages/explore_page.dart';
-// import 'package:straight_whiskey_mobile/screens/role_section_screen.dart';
+import 'package:curly_hairs/pages/explore_page.dart';
+// import 'package:curly_hairs/screens/role_section_screen.dart';
 
 class GuestHomeScreen extends StatefulWidget {
   @override
@@ -19,10 +19,8 @@ class _GuestHomeScreenState extends State<GuestHomeScreen> {
   ];
 
   final List<Widget> _children = [
+    ExplorePage(),
     GuestProfileScreen(),
-    GuestProfileScreen(),
-    // ExplorePage(),
-    // RoleSelectionScreen(),
   ];
 
   void onTabTapped(int index) {
