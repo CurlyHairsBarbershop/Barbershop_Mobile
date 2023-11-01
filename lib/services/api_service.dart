@@ -1,16 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:curly_hairs/models/register_model.dart';
-import 'package:curly_hairs/models/login_model.dart';
 import 'package:curly_hairs/models/user_model.dart';
 import 'user_service.dart';
 
 class ApiService {
   // TO DO add api link
-  static const String baseUrl = "YOUR_API_BASE_URL";
+  final String baseUrl = "YOUR_API_BASE_URL";
 
-  static Future<void> registerUser(RegisterModel registerModel) async {
-    final url = Uri.parse('$baseUrl/account');
+  Future<void> registerClient(RegisterModel registerModel) async {
+    final url = Uri.parse('https://your-api-url/account');
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -33,8 +32,8 @@ class ApiService {
     }
   }
 
-  static Future<UserData> getUserData() async {
-    final url = Uri.parse('$baseUrl/account/my');
+  Future<UserData> getUserData() async {
+    final url = Uri.parse('https://your-api-url/account/my');
 
     // Retrieve the token using the UserService
     final token = await UserService.getToken();
@@ -60,28 +59,6 @@ class ApiService {
     } else {
       print('Failed to retrieve user data');
       throw Exception('Failed to retrieve user data');
-    }
-  }
-
-  static Future<String?> loginUser(LoginModel loginModel) async {
-    final url = Uri.parse('$baseUrl/account'); // Modify the URL as needed
-
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-
-    final body = jsonEncode(loginModel.toJson());
-
-    final response = await http.post(url, headers: headers, body: body);
-
-    if (response.statusCode == 202) {
-      final jsonResponse = jsonDecode(response.body);
-      final token = jsonResponse['token'];
-
-      return token;
-    } else {
-      // Handle login failure
-      return null;
     }
   }
 }
