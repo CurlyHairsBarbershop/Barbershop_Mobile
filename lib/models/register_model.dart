@@ -20,9 +20,9 @@ class RegisterModel {
       'email': email,
       'password': password,
       'confirmPassword': confirmPassword,
-      'firstName': firstName,
+      'name': firstName,
       'lastName': lastName,
-      'phoneNumber': phoneNumber,
+      // 'phoneNumber': phoneNumber,
     };
   }
 }
