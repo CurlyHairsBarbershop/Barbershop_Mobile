@@ -32,15 +32,14 @@ class LoginScreen extends StatelessWidget {
                   email: emailController.text,
                   password: passwordController.text,
                 );
-
-                String? token =
-                    " "; // TODO: add String? token = await ApiService.loginUser(loginModel);
-                if (token != null) {
-                  // Handle successful login, e.g., navigate to a different screen
-                } else {
-                  // Handle login failure
-                  print('Login failed');
-                }
+                // String? token =
+                await ApiService.loginUser(loginModel);
+                // if (token != null) {
+                //   // Handle successful login, e.g., navigate to a different screen
+                // } else {
+                //   // Handle login failure
+                //   print('Login failed');
+                // }
               },
               child: Text("Login"),
             ),

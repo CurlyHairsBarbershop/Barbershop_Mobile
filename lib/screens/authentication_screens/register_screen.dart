@@ -5,6 +5,8 @@ import 'package:curly_hairs/services/api_service.dart';
 class RegisterScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
@@ -31,6 +33,11 @@ class RegisterScreen extends StatelessWidget {
               obscureText: true,
             ),
             TextField(
+              controller: confirmPasswordController,
+              decoration: InputDecoration(labelText: "Confirm Password"),
+              obscureText: true,
+            ),
+            TextField(
               controller: firstNameController,
               decoration: InputDecoration(labelText: "First Name"),
             ),
@@ -42,33 +49,18 @@ class RegisterScreen extends StatelessWidget {
               controller: phoneNumberController,
               decoration: InputDecoration(labelText: "Phone Number"),
             ),
-
-            //placeholder, should be smth like that:
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     RegisterModel registerModel = RegisterModel(
-            //       email: emailController.text,
-            //       password: passwordController.text,
-            //       firstName: firstNameController.text,
-            //       lastName: lastNameController.text,
-            //       phoneNumber: phoneNumberController.text,
-            //     );
-            //     await ApiService.registerUser(registerModel);
-            //     // Navigate to another screen if needed
-            //   },
-            //   child: Text("Register"),
-            // ),
             ElevatedButton(
               onPressed: () async {
-                // Placeholder logic instead of the actual API call
-                print("Registering user with the following details:");
-                print("Email: ${emailController.text}");
-                print("Password: ${passwordController.text}");
-                print("First Name: ${firstNameController.text}");
-                print("Last Name: ${lastNameController.text}");
-                print("Phone Number: ${phoneNumberController.text}");
-
-                print("User successfully registered (placeholder)");
+                RegisterModel registerModel = RegisterModel(
+                  email: emailController.text,
+                  password: passwordController.text,
+                  confirmPassword: confirmPasswordController.text,
+                  firstName: firstNameController.text,
+                  lastName: lastNameController.text,
+                  phoneNumber: phoneNumberController.text,
+                );
+                await ApiService.registerUser(registerModel);
+                // Navigate to another screen if needed
               },
               child: Text("Register"),
             ),
