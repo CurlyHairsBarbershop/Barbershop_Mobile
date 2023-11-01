@@ -7,10 +7,10 @@ import 'user_service.dart';
 
 class ApiService {
   // TO DO add api link
-  static const String baseUrl = "https://localhost:7284";
+  static const String baseUrl = "http://194.1.220.48:5092";
 
   static Future<void> registerUser(RegisterModel registerModel) async {
-    final url = Uri.parse('$baseUrl/account');
+    final url = Uri.parse('$baseUrl/account/register');
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -29,12 +29,15 @@ class ApiService {
       // You can also return the token if needed
       // return token;
     } else {
-      print('Registration failed');
+      print('Registration failed ${response.body}');
+      print('Registration failed ${response.headers}');
+      print('Registration failed ${response.statusCode}');
+
     }
   }
 
   static Future<UserData> getUserData() async {
-    final url = Uri.parse('$baseUrl/account/my');
+    final url = Uri.parse('$baseUrl/account');
 
     // Retrieve the token using the UserService
     final token = await UserService.getToken();
@@ -64,7 +67,7 @@ class ApiService {
   }
 
   static Future<void> loginUser(LoginModel loginModel) async {
-    final url = Uri.parse('$baseUrl/account'); // Modify the URL as needed
+    final url = Uri.parse('$baseUrl/account/login'); // Modify the URL as needed
 
     final headers = {
       'Content-Type': 'application/json',
