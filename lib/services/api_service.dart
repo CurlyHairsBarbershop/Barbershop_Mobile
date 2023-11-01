@@ -7,7 +7,7 @@ import 'user_service.dart';
 
 class ApiService {
   // TO DO add api link
-  static const String baseUrl = "YOUR_API_BASE_URL";
+  static const String baseUrl = "https://localhost:7284";
 
   static Future<void> registerUser(RegisterModel registerModel) async {
     final url = Uri.parse('$baseUrl/account');
