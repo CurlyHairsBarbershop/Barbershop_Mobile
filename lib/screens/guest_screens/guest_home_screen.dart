@@ -15,7 +15,7 @@ class _GuestHomeScreenState extends State<GuestHomeScreen> {
   int _currentIndex = 0;
   final List<String> _titles = [
     'Explore',
-    'Role Selection', // should be 'Profile'
+    'Profile',
   ];
 
   final List<Widget> _children = [
@@ -50,7 +50,7 @@ class _GuestHomeScreenState extends State<GuestHomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            label: 'Role Selection', // should be 'Profile'
+            label: 'Profile',
           ),
         ],
       ),

@@ -8,27 +8,28 @@ class GuestProfileScreen extends StatelessWidget {
       children: ListTile.divideTiles(
         context: context,
         tiles: [
-          ListTile(
-            leading: Icon(Icons.info),
-            title: Text('Guest Info'),
-            onTap: () {
-              // navigate to Info screen
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.people),
-            title: Text('Explore Barbers'),
-            onTap: () {
-              // navigate to Explore Barbers screen
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.content_cut),
-            title: Text('Explore Haircuts'),
-            onTap: () {
-              // navigate to Explore Haircuts screen
-            },
-          ),
+          // currently not needed
+          // ListTile(
+          //   leading: Icon(Icons.info),
+          //   title: Text('Guest Info'),
+          //   onTap: () {
+          //     // navigate to Info screen
+          //   },
+          // ),
+          // ListTile(
+          //   leading: Icon(Icons.people),
+          //   title: Text('Explore Barbers'),
+          //   onTap: () {
+          //     // navigate to Explore Barbers screen
+          //   },
+          // ),
+          // ListTile(
+          //   leading: Icon(Icons.content_cut),
+          //   title: Text('Explore Haircuts'),
+          //   onTap: () {
+          //     // navigate to Explore Haircuts screen
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.login),
             title: Text('Log In'),
