@@ -1,3 +1,5 @@
+//file: explore_page.dart
+
 import 'package:flutter/material.dart';
 
 import 'package:curly_hairs/pages/explore_pages/about_us_page.dart';
@@ -8,6 +10,10 @@ class ExplorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Explore"),
+        automaticallyImplyLeading: false,
+      ),
       body: ListView(
         children: <Widget>[
           ListTile(
@@ -45,3 +51,7 @@ class ExplorePage extends StatelessWidget {
     );
   }
 }
+
+//----------------------------------
+
+
