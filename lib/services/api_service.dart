@@ -32,7 +32,6 @@ class ApiService {
       print('Registration failed ${response.body}');
       print('Registration failed ${response.headers}');
       print('Registration failed ${response.statusCode}');
-
     }
   }
 
@@ -66,7 +65,7 @@ class ApiService {
     }
   }
 
-  static Future<void> loginUser(LoginModel loginModel) async {
+  static Future<bool> loginUser(LoginModel loginModel) async {
     final url = Uri.parse('$baseUrl/account/login'); // Modify the URL as needed
 
     final headers = {
@@ -82,11 +81,12 @@ class ApiService {
       final token = jsonResponse['token'];
 
       await UserService.storeToken(token);
-
+      return true;
       // You can also return the token if needed
       // return token;
     } else {
       print('Login failed');
+      return false;
     }
   }
 }
