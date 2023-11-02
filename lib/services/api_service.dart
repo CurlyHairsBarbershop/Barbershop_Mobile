@@ -16,7 +16,7 @@ class ApiService {
     };
 
     final body = jsonEncode(registerModel.toJson());
-
+    print("start request to db");
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 201) {
@@ -65,7 +65,7 @@ class ApiService {
     }
   }
 
-  static Future<bool> loginUser(LoginModel loginModel) async {
+  static Future<void> loginUser(LoginModel loginModel) async {
     final url = Uri.parse('$baseUrl/account/login'); // Modify the URL as needed
 
     final headers = {
@@ -81,12 +81,12 @@ class ApiService {
       final token = jsonResponse['token'];
 
       await UserService.storeToken(token);
-      return true;
+      // return true;
       // You can also return the token if needed
       // return token;
     } else {
       print('Login failed');
-      return false;
+      // return false;
     }
   }
 }

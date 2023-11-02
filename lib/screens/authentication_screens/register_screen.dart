@@ -1,3 +1,5 @@
+import 'package:curly_hairs/screens/client_screens/client_home_screen.dart';
+import 'package:curly_hairs/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/register_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
@@ -60,7 +62,21 @@ class RegisterScreen extends StatelessWidget {
                   phoneNumber: phoneNumberController.text,
                 );
                 await ApiService.registerUser(registerModel);
-                // TODO: Navigate to another screen
+
+                // TODO: redirect to screen according to role
+                if (await UserService.getToken() != null) {
+                  // for now, redirect to client profile (but need to change ASAP)
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => ClientHomeScreen(
+                              initialTabIndex: 2,
+                            )),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Login failed. Please try again.")),
+                  );
+                }
               },
               child: Text("Register"),
             ),
