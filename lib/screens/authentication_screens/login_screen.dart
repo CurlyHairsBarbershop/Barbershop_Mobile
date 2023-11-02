@@ -8,10 +8,11 @@ import 'package:curly_hairs/models/login_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
 
 class LoginScreen extends StatelessWidget {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-// TODO: add validation for fields
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,50 +21,73 @@ class LoginScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(labelText: "Email"),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: "Password"),
-              obscureText: true,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                LoginModel loginModel = LoginModel(
-                  email: emailController.text,
-                  password: passwordController.text,
-                );
-                // uncomment when connected to db
-                await ApiService.loginUser(loginModel);
-                // bool success = true;
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(labelText: "Email"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!value.contains('@')) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: passwordController,
+                decoration: InputDecoration(labelText: "Password"),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters long';
+                  }
+                  return null;
+                },
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    LoginModel loginModel = LoginModel(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    );
+                    await ApiService.loginUser(loginModel);
 
-                // TODO: redirect to screen according to role
-                if (await UserService.getToken() != null) {
-                  // for now, redirect to client profile (but need to change ASAP)
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context) => ClientHomeScreen(
-                              initialTabIndex: 2,
-                            )),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Login failed. Please try again.")),
-                  );
-                }
-              },
-              child: Text("Login"),
-            ),
-          ],
+                    // TODO: redirect to screen according to role
+                    if (await UserService.getToken() != null) {
+                      // for now, redirect to client profile (but need to change ASAP)
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => ClientHomeScreen(
+                                  initialTabIndex: 2,
+                                )),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text("Login failed. Please try again.")),
+                      );
+                    }
+                  }
+                },
+                child: Text("Login"),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
 
 //------------------------------------------------------------------------
 
