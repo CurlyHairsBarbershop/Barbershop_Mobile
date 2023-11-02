@@ -1,3 +1,7 @@
+// file: login_screen.dart
+
+import 'package:curly_hairs/screens/client_screens/client_home_screen.dart';
+import 'package:curly_hairs/screens/client_screens/client_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/login_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
@@ -32,14 +36,24 @@ class LoginScreen extends StatelessWidget {
                   email: emailController.text,
                   password: passwordController.text,
                 );
-                // String? token =
-                await ApiService.loginUser(loginModel);
-                // if (token != null) {
-                //   // Handle successful login, e.g., navigate to a different screen
-                // } else {
-                //   // Handle login failure
-                //   print('Login failed');
-                // }
+                // uncomment when connected to db
+                //bool success = await ApiService.loginUser(loginModel);
+                bool success = true;
+
+                // TODO: redirect to screen according to role
+                if (success) {
+                  // for now, redirect to client profile (but need to change ASAP)
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => ClientHomeScreen(
+                              initialTabIndex: 2,
+                            )),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Login failed. Please try again.")),
+                  );
+                }
               },
               child: Text("Login"),
             ),
@@ -49,3 +63,6 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
+//------------------------------------------------------------------------
+
