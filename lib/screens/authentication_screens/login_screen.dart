@@ -63,7 +63,7 @@ class LoginScreen extends StatelessWidget {
 
                     // TODO: redirect to screen according to role
                     if (await UserService.getToken() != null) {
-                      // for now, redirect to client profile (but need to change ASAP)
+                      // for now, redirect to client profile (but need to change for redirecting to specific role ASAP)
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                             builder: (context) => ClientHomeScreen(

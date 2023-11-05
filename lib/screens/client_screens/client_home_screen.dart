@@ -1,5 +1,8 @@
 // file: client_home_screen.dart
 
+import 'package:curly_hairs/models/appointment_model.dart';
+import 'package:curly_hairs/models/client_model.dart';
+import 'package:curly_hairs/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/screens/client_screens/client_profile_screen.dart';
 import 'package:curly_hairs/screens/client_screens/client_make_appointment_screen.dart';
@@ -22,11 +25,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     'Profile',
   ];
 
-  final List<Widget> _children = [
-    ExplorePage(),
-    MakeAppointmentScreen(),
-    ClientProfileScreen(),
-  ];
+  Future<Appointment>? _appointmentFuture;
 
   void onTabTapped(int index) {
     setState(() {
@@ -38,44 +37,86 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   void initState() {
     super.initState();
     _currentIndex = widget.initialTabIndex;
+    _appointmentFuture = _initAppointment();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
   }
 
+  Future<Appointment> _initAppointment() async {
+    // Hardcoded client data
+    Client client = Client(
+      name: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      phoneNumber: '123-456-7890',
+    );
+
+    // Client client = await UserService.getClient();
+
+    // Creating the appointment instance with the hardcoded data
+    Appointment appointment = Appointment(
+      //id: '1',
+      barber: null,
+      client: client,
+      appointmentTime: DateTime.now(),
+      services: [],
+      paymentMethod: null,
+      totalSum: 0.0,
+    );
+
+    return appointment;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(_titles[_currentIndex]),
-      //   automaticallyImplyLeading: false,
-      // ),
-      body: Center(
-        child: _children[_currentIndex],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
-        currentIndex: _currentIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Make Appointment',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Profile',
-          ),
-        ],
-      ),
+    return FutureBuilder<Appointment>(
+      future: _appointmentFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          Appointment appointment = snapshot.data!;
+          List<Widget> _children = [
+            ExplorePage(),
+            MakeAppointmentScreen(appointment: appointment),
+            ClientProfileScreen(),
+          ];
+
+          return Scaffold(
+            // appBar: AppBar(
+            //   title: Text(_titles[_currentIndex]),
+            //   automaticallyImplyLeading: false,
+            // ),
+            body: Center(
+              child: _children[_currentIndex],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              onTap: onTabTapped,
+              currentIndex: _currentIndex,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.explore),
+                  label: 'Explore',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today),
+                  label: 'Make Appointment',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people),
+                  label: 'Profile',
+                ),
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Failed to load appointment data'));
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
-
-
 //------------------------------------------------------------------------
-
-
