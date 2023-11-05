@@ -34,7 +34,7 @@ class BarbersPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BarberProfilePage(barber: barber),
+                        builder: (context) => BarberProfilePage(barber: barber), // Pass the reviews here
                       ),
                     );
                   },

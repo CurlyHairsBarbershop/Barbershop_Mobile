@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/barber_model.dart';
-
-class Review {
-  final double rating;
-  final String text;
-
-  Review({required this.rating, required this.text});
-}
+import 'package:curly_hairs/models/review_model.dart';
 
 class BarberProfilePage extends StatefulWidget {
   final Barber barber;
@@ -18,12 +12,12 @@ class BarberProfilePage extends StatefulWidget {
 }
 
 class _BarberProfilePageState extends State<BarberProfilePage> {
-  final List<Review> reviews = [
-    Review(rating: 4.5, text: "Great service and friendly staff."),
-    Review(rating: 5.0, text: "Best haircut I've had in years!"),
-    Review(rating: 3.5, text: "Good, but a bit pricey."),
-    // Add more reviews as needed
-  ];
+  // final List<Review> reviews = [
+  //   Review(rating: 4.5, text: "Great service and friendly staff."),
+  //   Review(rating: 5.0, text: "Best haircut I've had in years!"),
+  //   Review(rating: 3.5, text: "Good, but a bit pricey."),
+  //   // Add more reviews as needed
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +48,15 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
           ListView.builder(
             physics: NeverScrollableScrollPhysics(), // to prevent inner scroll
             shrinkWrap: true, // necessary for nested ListViews
-            itemCount: reviews.length,
+            itemCount: widget.barber.reviews.length,
             itemBuilder: (context, index) {
-              Review review = reviews[index];
+              Review review = widget.barber.reviews[index];
               return ListTile(
                 leading: CircleAvatar(
                   child: Icon(Icons.person), // Placeholder for commenter image
                 ),
                 title: Text(review.rating.toString()), // Display rating
-                subtitle: Text(review.text), // Display comment
+                subtitle: Text(review.content), // Display comment
               );
             },
           ),
