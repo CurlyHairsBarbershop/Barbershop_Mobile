@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:curly_hairs/models/register_model.dart';
 import 'package:curly_hairs/models/login_model.dart';
 import 'package:curly_hairs/models/user_model.dart';
+import 'package:curly_hairs/models/barber_model.dart';
 import 'user_service.dart';
 
 class ApiService {
@@ -87,6 +88,21 @@ class ApiService {
     } else {
       print('Login failed');
       // return false;
+    }
+  }
+
+  static Future<List<Barber>> getAllBarbers() async {
+    final response = await http.get(Uri.parse('$baseUrl/barbers'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      return data.map((barberJson) => Barber.fromJson(barberJson)).toList();
+    } else {
+      throw Exception('Failed to fetch barbers');
     }
   }
 }
