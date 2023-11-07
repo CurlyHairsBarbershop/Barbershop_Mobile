@@ -2,6 +2,7 @@
 
 import 'package:curly_hairs/screens/client_screens/client_personal_info_screen.dart';
 import 'package:curly_hairs/screens/guest_screens/guest_home_screen.dart';
+import 'package:curly_hairs/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 class ClientProfileScreen extends StatelessWidget {
@@ -35,10 +36,11 @@ class ClientProfileScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.exit_to_app),
                 title: Text('Log Out'),
-                onTap: () {
+                onTap: () async {
+                  await UserService.clearToken();
                   // for now, lets navigate to guest profile screen
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
+                    MaterialPageRoute( 
                         builder: (context) => GuestHomeScreen(
                               initialTabIndex: 1,
                             )),

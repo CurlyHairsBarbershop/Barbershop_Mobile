@@ -12,11 +12,21 @@ class UserData {
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
+    print(json);
     return UserData(
       name: json['name'],
       lastName: json['lastName'],
       email: json['email'],
-      phoneNumber: json['phoneNumber'],
+      phoneNumber: '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'lastName': lastName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+    };
   }
 }
