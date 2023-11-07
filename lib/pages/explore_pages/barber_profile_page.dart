@@ -1,5 +1,6 @@
 import 'package:curly_hairs/models/reply_model.dart';
 import 'package:curly_hairs/models/review_model.dart';
+import 'package:curly_hairs/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/barber_model.dart';
 
@@ -39,7 +40,7 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
             child: Text('Reviews', style: Theme.of(context).textTheme.headline6),
           ),
           for (var review in widget.barber.reviews)
-            ReviewWidget(review: review),
+            ReviewWidget(review: review, barber: widget.barber,),
         ],
       ),
     );
@@ -48,15 +49,16 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
 
 class ReviewWidget extends StatelessWidget {
   final Review review;
+  Barber barber;
   final double replyIndent = 20.0; // Indentation for each reply level
 
-  ReviewWidget({required this.review});
+  ReviewWidget({required this.review, required this.barber});
 
-  Future<void> _showReplyDialog(BuildContext context) async {
+  Future<void> _showReplyDialog(BuildContext context, int parentReviewId) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        String replyContent = ''; // The content of the reply
+        String replyContent = ''; 
 
         return AlertDialog(
           title: Text('Write a Reply'),
@@ -73,10 +75,19 @@ class ReviewWidget extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               child: Text('Submit'),
-              onPressed: () {
+              onPressed: () async {
+
                 // Here, you can handle the reply content
-                // For instance, you can call a function to save the reply content
-                print('Reply: $replyContent');
+                
+                print('Reply to Review $parentReviewId: $replyContent');
+                await ApiService.postReply({
+                  'reviewId': parentReviewId,
+                  'content': replyContent,
+                });
+
+                // Barber selectedBarber = (await ApiService.getAllBarbers())
+                //   .firstWhere((element) => element.email == barber.email);
+                // barber = selectedBarber;
                 Navigator.of(context).pop(); // To close the dialog
               },
             ),
@@ -108,7 +119,7 @@ class ReviewWidget extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     // Functionality to write a reply
-                    _showReplyDialog(context);
+                    _showReplyDialog(context, reply.id);
                     // This could be a dialog or navigation to a new page for writing replies
                   },
                   child: Text('Reply'),
@@ -151,7 +162,7 @@ class ReviewWidget extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     // Functionality to write a reply
-                    _showReplyDialog(context);
+                    _showReplyDialog(context, review.id);
                     // This could be a dialog or navigation to a new page for writing replies
                   },
                   child: Text('Reply'),

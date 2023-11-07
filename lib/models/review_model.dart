@@ -3,6 +3,7 @@ import 'package:curly_hairs/models/user_model.dart';
 
 class Review {
   final int id;
+  final String title;
   final String content;
   final double rating;
   final UserData publisher;
@@ -10,6 +11,7 @@ class Review {
 
   Review({
     required this.id,
+    required this.title,
     required this.content,
     required this.rating,
     required this.publisher,
@@ -20,6 +22,7 @@ class Review {
     print(json);
     return Review(
       id: json['id'],
+      title: json['title'],
       content: json['content'],
       rating: json['rating'].toDouble(),
       publisher: UserData.fromJson(json['publisher']),
@@ -32,9 +35,10 @@ class Review {
   // TO DO
   Map<String, dynamic> toJson() {
     return {
+      'title': title,
       'content': content,
       'rating': rating,
-      //'publisher': publisher.toJson(),
+      
     };
   }
 }
