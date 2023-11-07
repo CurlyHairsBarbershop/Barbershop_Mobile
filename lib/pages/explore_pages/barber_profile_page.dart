@@ -1,6 +1,8 @@
+import 'package:curly_hairs/models/reply_model.dart';
+import 'package:curly_hairs/models/review_model.dart';
+import 'package:curly_hairs/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/barber_model.dart';
-import 'package:curly_hairs/models/review_model.dart';
 
 class BarberProfilePage extends StatefulWidget {
   final Barber barber;
@@ -12,13 +14,6 @@ class BarberProfilePage extends StatefulWidget {
 }
 
 class _BarberProfilePageState extends State<BarberProfilePage> {
-  // final List<Review> reviews = [
-  //   Review(rating: 4.5, text: "Great service and friendly staff."),
-  //   Review(rating: 5.0, text: "Best haircut I've had in years!"),
-  //   Review(rating: 3.5, text: "Good, but a bit pricey."),
-  //   // Add more reviews as needed
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,24 +37,147 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
           Divider(),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child:
-                Text('Reviews', style: Theme.of(context).textTheme.headline6),
+            child: Text('Reviews', style: Theme.of(context).textTheme.headline6),
           ),
-          ListView.builder(
-            physics: NeverScrollableScrollPhysics(), // to prevent inner scroll
-            shrinkWrap: true, // necessary for nested ListViews
-            itemCount: widget.barber.reviews.length,
-            itemBuilder: (context, index) {
-              Review review = widget.barber.reviews[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  child: Icon(Icons.person), // Placeholder for commenter image
-                ),
-                title: Text(review.rating.toString()), // Display rating
-                subtitle: Text(review.content), // Display comment
-              );
+          for (var review in widget.barber.reviews)
+            ReviewWidget(review: review, barber: widget.barber,),
+        ],
+      ),
+    );
+  }
+}
+
+class ReviewWidget extends StatelessWidget {
+  final Review review;
+  Barber barber;
+  final double replyIndent = 20.0; // Indentation for each reply level
+
+  ReviewWidget({required this.review, required this.barber});
+
+  Future<void> _showReplyDialog(BuildContext context, int parentReviewId) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String replyContent = ''; 
+
+        return AlertDialog(
+          title: Text('Write a Reply'),
+          content: TextFormField(
+            onChanged: (value) {
+              replyContent = value;
             },
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'Type your reply here...',
+              border: OutlineInputBorder(),
+            ),
           ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Submit'),
+              onPressed: () async {
+
+                // Here, you can handle the reply content
+                
+                print('Reply to Review $parentReviewId: $replyContent');
+                await ApiService.postReply({
+                  'reviewId': parentReviewId,
+                  'content': replyContent,
+                });
+
+                // Barber selectedBarber = (await ApiService.getAllBarbers())
+                //   .firstWhere((element) => element.email == barber.email);
+                // barber = selectedBarber;
+                Navigator.of(context).pop(); // To close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildReply(Reply reply, int level, BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(left: replyIndent * level),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '${reply.publisher.name}:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 20),
+                ),
+                Spacer(),
+                TextButton(
+                  onPressed: () {
+                    // Functionality to write a reply
+                    _showReplyDialog(context, reply.id);
+                    // This could be a dialog or navigation to a new page for writing replies
+                  },
+                  child: Text('Reply'),
+                ),
+              ],
+            ),
+            Text(
+              reply.content,
+              style: TextStyle(fontSize: 18.0),
+            ),
+            for (var subReply in reply.replies) buildReply(subReply, level + 1, context),
+          ],
+        ),
+      ),
+    );
+  }
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: replyIndent * 0),
+            child: Row(
+              children: [
+                Text(
+                  '${review.publisher.name}:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 20),
+                ),
+                Spacer(),
+                TextButton(
+                  onPressed: () {
+                    // Functionality to write a reply
+                    _showReplyDialog(context, review.id);
+                    // This could be a dialog or navigation to a new page for writing replies
+                  },
+                  child: Text('Reply'),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: replyIndent * 0),
+            child: Text(
+              review.content,
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ),
+          for (var reply in review.replies) buildReply(reply, 1, context),
         ],
       ),
     );
