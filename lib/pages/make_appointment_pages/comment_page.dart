@@ -1,3 +1,4 @@
+import 'package:curly_hairs/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/barber_model.dart';
 import 'package:curly_hairs/models/review_model.dart';
@@ -28,24 +29,34 @@ class _CommentPageState extends State<CommentPage> {
 
       List<Review> fetchedReviews = [
         Review(
-          reviewID: 1,
-          rating: 5,
-          text: 'Great service! Highly recommend.',
-          appointmentID: 101,
-          photo: 'https://example.com/photo1.jpg',
+          content: 'Great service! Highly recommend.',
+          rating: 5.0,
+          publisher: UserData(
+            name: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phoneNumber: '123-456-7890',
+          ),
         ),
         Review(
-          reviewID: 2,
-          rating: 4,
-          text: 'Good service, will visit again.',
-          appointmentID: 102,
-          photo: 'https://example.com/photo2.jpg',
+          content: 'Good service, will visit again.',
+          rating: 4.0,
+          publisher: UserData(
+            name: 'Jane',
+            lastName: 'Doe',
+            email: 'jane.doe@example.com',
+            phoneNumber: '098-765-4321',
+          ),
         ),
         Review(
-          reviewID: 3,
-          rating: 3,
-          text: 'Service was okay, could be better.',
-          appointmentID: 103,
+          content: 'Service was okay, could be better.',
+          rating: 3.0,
+          publisher: UserData(
+            name: 'Jim',
+            lastName: 'Beam',
+            email: 'jim.beam@example.com',
+            phoneNumber: '555-555-5555',
+          ),
         ),
         // ...add more Review instances as needed
       ];
@@ -73,7 +84,7 @@ class _CommentPageState extends State<CommentPage> {
               child: Icon(Icons.person), // replace with commenter image
             ),
             title: Text(review.rating.toString()), // replace with rating
-            subtitle: Text(review.text), // replace with comment
+            subtitle: Text(review.content), // replace with comment
           );
         },
       ),
