@@ -11,15 +11,9 @@ class _ServicesPageState extends State<ServicesPage> {
   List<Service> services = [];
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
-    // Instead of fetching from an API, we are hardcoding the services
-    services = [
-      Service(name: "Haircut", cost: 15.00, duration: Duration(minutes: 30)),
-      Service(name: "Shaving", cost: 10.00, duration: Duration(minutes: 15)),
-      Service(name: "Hair Coloring", cost: 50.00, duration: Duration(hours: 2)),
-      // Add more services as needed
-    ];
+    services = await ApiService.getAllServices();
   }
 
   @override
@@ -36,7 +30,7 @@ class _ServicesPageState extends State<ServicesPage> {
             leading: Icon(Icons.cut),
             title: Text(service.name),
             subtitle: Text(
-                'Price: \$${service.cost.toStringAsFixed(2)}\nDuration: ${service.duration.inMinutes} minutes'),
+                'Price: \$${service.cost.toStringAsFixed(2)}\nDescription: ${service.description}'),
           );
         },
       ),

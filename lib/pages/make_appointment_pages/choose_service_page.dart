@@ -24,26 +24,7 @@ class _ChooseServicePageState extends State<ChooseServicePage> {
 
   Future<void> fetchServices() async {
     try {
-      // List<Service> fetchedServices = await ApiService.fetchServices();
-
-      List<Service> fetchedServices = [
-        Service(
-          name: 'Haircut',
-          cost: 25.0,
-          duration: Duration(minutes: 30),
-        ),
-        Service(
-          name: 'Shave',
-          cost: 15.0,
-          duration: Duration(minutes: 20),
-        ),
-        Service(
-          name: 'Hair Coloring',
-          cost: 50.0,
-          duration: Duration(hours: 2),
-        ),
-        // ...add more Service instances as needed
-      ];
+      List<Service> fetchedServices = await ApiService.getAllServices();
 
       setState(() {
         services = fetchedServices;
@@ -66,7 +47,7 @@ class _ChooseServicePageState extends State<ChooseServicePage> {
           return ListTile(
             title: Text(service.name),
             subtitle: Text(
-                '\$${service.cost.toStringAsFixed(2)}\nDuration: ${service.duration.inMinutes} minutes'),
+                '\$${service.cost.toStringAsFixed(2)}\nDescription: ${service.description}'),
             onTap: () {
               setState(() {
                 if (widget.appointment.services.contains(service)) {

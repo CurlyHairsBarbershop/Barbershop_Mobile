@@ -5,18 +5,18 @@ class Service {
   final int id;
 
   Service({
-    required this.cost,
+    required this.id,
     required this.name,
     required this.description,
-    required this.id
+    required this.cost
   });
 
   factory Service.fromJson(Map<String, dynamic> json) {
     return Service(
-      cost: json['cost'].toDouble(),
+      id : json['id'],
       name: json['name'],
       description: json['description'],
-      id : json['id']
+      cost: json['cost'].toDouble()
     );
   }
 }
