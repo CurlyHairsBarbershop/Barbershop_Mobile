@@ -28,46 +28,6 @@ class _ChooseBarberPageState extends State<ChooseBarberPage> {
   Future<void> fetchBarbers() async {
     try {
       List<Barber> fetchedBarbers = await ApiService.getAllBarbers();
-
-      // // Mock data for reviews, replace with actual review data.
-      // List<Review> mockReviews = [
-      //   Review(
-      //     content: 'Great service!',
-      //     rating: 5.0,
-      //     publisher: UserData(
-      //       name: 'Customer',
-      //       lastName: 'One',
-      //       email: 'customer.one@example.com',
-      //       phoneNumber: '555-123-4567',
-      //     ),
-      //   ),
-      //   // ... add more Review instances as needed
-      // ];
-
-      // List<Barber> fetchedBarbers = [
-      //   Barber(
-      //     name: 'John',
-      //     lastName: 'Doe',
-      //     email: 'john.doe@example.com',
-      //     phoneNumber: '123-456-7890',
-      //     earnings: 1200.00, // Mock earning
-      //     rating: 4.5, // Mock rating
-      //     image: 'path/to/john_doe_image.jpg', // Mock image path
-      //     reviews: mockReviews,
-      //   ),
-      //   Barber(
-      //     name: 'Jane',
-      //     lastName: 'Doe',
-      //     email: 'jane.doe@example.com',
-      //     phoneNumber: '098-765-4321',
-      //     earnings: 1500.00, // Mock earning
-      //     rating: 4.8, // Mock rating
-      //     image: 'path/to/jane_doe_image.jpg', // Mock image path
-      //     reviews: mockReviews,
-      //   ),
-      //   // ...add more Barber instances as needed
-      // ];
-
       setState(() {
         barbers = fetchedBarbers;
       });
@@ -124,6 +84,7 @@ class _ChooseBarberPageState extends State<ChooseBarberPage> {
                     setState(() {
                       widget.appointment.barber = barber;
                     });
+                    navigateToChooseDatePage();
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
@@ -140,21 +101,22 @@ class _ChooseBarberPageState extends State<ChooseBarberPage> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (widget.appointment.barber != null) {
-            navigateToChooseDatePage();
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Please choose a barber.'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          }
-        },
-        child: Icon(Icons.arrow_forward),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     print("d ${widget.appointment.barber?.name}");
+      //     if (widget.appointment.barber != null) {
+      //       navigateToChooseDatePage();
+      //     } else {
+      //       ScaffoldMessenger.of(context).showSnackBar(
+      //         SnackBar(
+      //           content: Text('Please choose a barber.'),
+      //           duration: Duration(seconds: 2),
+      //         ),
+      //       );
+      //     }
+      //   },
+      //   child: Icon(Icons.arrow_forward),
+      // ),
     );
   }
 }

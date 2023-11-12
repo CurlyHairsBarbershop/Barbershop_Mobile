@@ -1,5 +1,5 @@
+import 'package:curly_hairs/screens/client_screens/client_make_appointment_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:curly_hairs/pages/make_appointment_pages/choose_payment_page.dart';
 import 'package:curly_hairs/models/appointment_model.dart';
 import 'package:curly_hairs/models/service_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
@@ -86,7 +86,7 @@ class _ChooseServicePageState extends State<ChooseServicePage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ChoosePaymentPage(appointment: widget.appointment),
+            MakeAppointmentScreen(appointment: widget.appointment),
       ),
     );
   }

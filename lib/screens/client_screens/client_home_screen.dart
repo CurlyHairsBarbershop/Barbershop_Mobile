@@ -45,25 +45,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   }
 
   Future<Appointment> _initAppointment() async {
-    // Hardcoded client data
-    Client client = Client(
-      name: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '123-456-7890',
-    );
-
-    // Client client = await UserService.getClient();
-
-    // Creating the appointment instance with the hardcoded data
     Appointment appointment = Appointment(
-      //id: '1',
       barber: null,
-      client: client,
-      appointmentTime: DateTime.now(),
+      appointmentTime: null,
       services: [],
-      paymentMethod: null,
-      totalSum: 0.0,
     );
 
     return appointment;

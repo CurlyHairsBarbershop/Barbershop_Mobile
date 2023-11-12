@@ -1,29 +1,9 @@
-// file: client_make_appointment.dart
-
-// import 'package:flutter/material.dart';
-
-// class MakeAppointmentScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Make Appointment'),
-//         automaticallyImplyLeading: false,
-//       ),
-//       body: Center(
-//         child: Text('Content goes here'),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/appointment_model.dart';
 import 'package:curly_hairs/screens/client_screens/client_home_screen.dart';
 import 'package:curly_hairs/services/api_service.dart';
 import 'package:curly_hairs/pages/make_appointment_pages/choose_barber_page.dart';
 import 'package:curly_hairs/pages/make_appointment_pages/choose_service_page.dart';
-import 'package:curly_hairs/pages/make_appointment_pages/choose_payment_page.dart';
 import 'package:curly_hairs/pages/make_appointment_pages/choose_date_page.dart';
 
 class MakeAppointmentScreen extends StatefulWidget {
@@ -64,13 +44,6 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
               navigateToChooseServicePage();
             },
           ),
-          ListTile(
-            leading: Icon(Icons.payment),
-            title: Text('Choose a Payment Method'),
-            onTap: () {
-              navigateToChoosePaymentPage();
-            },
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -109,39 +82,25 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
     );
   }
 
-  void navigateToChoosePaymentPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChoosePaymentPage(appointment: appointment),
-      ),
-    );
-  }
-
   Future<void> submitAppointment() async {
     // Calculate the total sum of the services
-    double totalSum = 0.0;
-    for (var service in appointment.services) {
-      totalSum += service.cost;
-    }
-    appointment.totalSum = totalSum;
+
     print('-----APPOINTMENT TO POST-----');
     // print(appointment.toJson());
 
     if (appointment.barber != null &&
         appointment.appointmentTime != null &&
-        appointment.services.isNotEmpty &&
-        appointment.paymentMethod != null) {
+        appointment.services.isNotEmpty) {
       try {
-        // await ApiService.postAppointment(appointment);
-        setState(() {
-          // appointment.id = '';
-          appointment.barber = null;
-          appointment.appointmentTime = DateTime.now();
-          appointment.services = [];
-          appointment.paymentMethod = null;
-          appointment.totalSum = 0;
-        });
+        await ApiService.postAppointment(appointment.toJson());
+
+        // placeholder
+        // setState(() {
+        //   // appointment.id = '';
+        //   appointment.barber = null;
+        //   appointment.appointmentTime = DateTime.now();
+        //   appointment.services = [];
+        // });
         // Show a success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -123,6 +123,30 @@ class ApiService {
     }
   }
 
+  static Future<List<DateTime>> getAllDateTime(
+      int barberID, int dayOffset) async {
+    print("Barber ID in getAllDateTime: $barberID");
+    print("$baseUrl/barbers/${barberID}/schedule");
+
+    final response =
+        await http.get(Uri.parse('$baseUrl/barbers/$barberID/schedule'));
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final List<dynamic> data =
+          json.decode(response.body.isEmpty ? "[]" : response.body);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      return data
+          .map((dateTimeJson) => DateTime.parse(dateTimeJson).toLocal())
+          .toList();
+    } else {
+      throw Exception(
+          'Failed to fetch date times. Status code ${response.statusCode}');
+    }
+  }
+
   static Future<void> postReply(Map<String, dynamic> reply) async {
     final token = await UserService.getToken();
     if (token == null) {
@@ -135,7 +159,8 @@ class ApiService {
     };
     final body = json.encode(reply);
 
-    final response = await http.post(Uri.parse('$baseUrl/barbers/reply'), headers: headers, body: body);
+    final response = await http.post(Uri.parse('$baseUrl/barbers/reply'),
+        headers: headers, body: body);
 
     if (response.statusCode == 202) {
       //final List<dynamic> data = json.decode(response.body);
@@ -143,12 +168,42 @@ class ApiService {
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
       throw Exception('Failed to post a reply');
+    }
+  }
+
+  static Future<void> postAppointment(Map<String, dynamic> reply) async {
+    final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final body = json.encode(reply);
+
+    print(body.toString());
+
+    final response = await http.post(Uri.parse('$baseUrl/appointments'),
+        headers: headers, body: body);
+
+    if (response.statusCode == 201) {
+      //final List<dynamic> data = json.decode(response.body);
+      //final jsonResponse = jsonDecode(response.body);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    } else {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      throw Exception('Failed to post an appointment');
     }
   }
 }

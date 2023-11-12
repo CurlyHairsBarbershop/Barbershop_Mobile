@@ -2,14 +2,14 @@ import 'package:curly_hairs/models/user_model.dart';
 import 'package:curly_hairs/models/review_model.dart';
 
 class Barber extends UserData {
-  //final int id;
+  final int id;
   final double earnings;
   final double rating;
   final String image;
   final List<Review> reviews;
 
   Barber({
-    //required this.id,
+    required this.id,
     required String name,
     required String lastName,
     required String email,
@@ -28,7 +28,7 @@ class Barber extends UserData {
   factory Barber.fromJson(Map<String, dynamic> json) {
     print(json);
     return Barber(
-      //id: json['id'],
+      id: json['id'],
       email: json['email'],
       name: json['name'],
       lastName: json['lastName'],
