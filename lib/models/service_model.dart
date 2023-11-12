@@ -1,11 +1,22 @@
 class Service {
-  final String name;
   final double cost;
-  final Duration duration;
+  final String name;
+  final String description;
+  final int id;
 
   Service({
-    required this.name,
     required this.cost,
-    required this.duration,
+    required this.name,
+    required this.description,
+    required this.id
   });
+
+  factory Service.fromJson(Map<String, dynamic> json) {
+    return Service(
+      cost: json['cost'].toDouble(),
+      name: json['name'],
+      description: json['description'],
+      id : json['id']
+    );
+  }
 }

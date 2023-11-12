@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:curly_hairs/models/reply_model.dart';
+import 'package:curly_hairs/models/service_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:curly_hairs/models/register_model.dart';
 import 'package:curly_hairs/models/login_model.dart';
@@ -102,6 +103,21 @@ class ApiService {
       print('Response body: ${response.body}');
 
       return data.map((barberJson) => Barber.fromJson(barberJson)).toList();
+    } else {
+      throw Exception('Failed to fetch barbers');
+    }
+  }
+
+  static Future<List<Service>> getAllServices() async {
+    final response = await http.get(Uri.parse('$baseUrl/favors'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      return data.map((serviceJson) => Service.fromJson(serviceJson)).toList();
     } else {
       throw Exception('Failed to fetch barbers');
     }
