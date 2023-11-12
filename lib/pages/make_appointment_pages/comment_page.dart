@@ -29,6 +29,8 @@ class _CommentPageState extends State<CommentPage> {
 
       List<Review> fetchedReviews = [
         Review(
+          id: 1, // Assuming you have a unique identifier for each review
+          title: 'Fantastic Haircut!', // Placeholder title
           content: 'Great service! Highly recommend.',
           rating: 5.0,
           publisher: UserData(
@@ -37,8 +39,11 @@ class _CommentPageState extends State<CommentPage> {
             email: 'john.doe@example.com',
             phoneNumber: '123-456-7890',
           ),
+          replies: [],
         ),
         Review(
+          id: 1, // Assuming you have a unique identifier for each review
+          title: 'Fantastic Haircut!', // Placeholder title
           content: 'Good service, will visit again.',
           rating: 4.0,
           publisher: UserData(
@@ -47,8 +52,11 @@ class _CommentPageState extends State<CommentPage> {
             email: 'jane.doe@example.com',
             phoneNumber: '098-765-4321',
           ),
+          replies: [],
         ),
         Review(
+          id: 1, // Assuming you have a unique identifier for each review
+          title: 'Fantastic Haircut!', // Placeholder title
           content: 'Service was okay, could be better.',
           rating: 3.0,
           publisher: UserData(
@@ -57,6 +65,7 @@ class _CommentPageState extends State<CommentPage> {
             email: 'jim.beam@example.com',
             phoneNumber: '555-555-5555',
           ),
+          replies: [],
         ),
         // ...add more Review instances as needed
       ];
