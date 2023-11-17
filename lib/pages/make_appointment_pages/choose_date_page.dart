@@ -18,7 +18,6 @@ class _ChooseDatePageState extends State<ChooseDatePage> {
   String? selectedTime;
 
   Future<void> fetchSchedule() async {
-    // Assuming this is the barber's ID and it's passed correctly to the widget
     int barberID = widget.appointment.barber?.id ?? 0;
     List<DateTime> busyTimes = [];
     try {
@@ -34,24 +33,31 @@ class _ChooseDatePageState extends State<ChooseDatePage> {
       );
     }
 
+    // Get the current time
+    DateTime now = DateTime.now();
+
     // Assuming barber works from 09:00 to 19:00, create all time slots
     List<DateTime> allTimes = List.generate(10, (i) {
       DateTime time = DateTime(
-          selectedDate!.year, selectedDate!.month, selectedDate!.day, i);
+          selectedDate!.year, selectedDate!.month, selectedDate!.day, i + 9);
       return time.toLocal();
     });
 
     print(allTimes);
 
-    // Remove the busy times from all times to get the available times
+    // Filter out busy times and past times
     setState(() {
+      availableTimes.clear(); // Clear previous times
       for (var slot in allTimes) {
         if (busyTimes.any((time) =>
             slot.compareTo(time.add(Duration(hours: 1))) < 0 &&
             slot.compareTo(time) >= 0)) {
           continue;
         }
-        availableTimes.add(slot);
+        // Add to available times only if it's in the future
+        if (slot.isAfter(now)) {
+          availableTimes.add(slot);
+        }
       }
     });
   }
@@ -68,29 +74,38 @@ class _ChooseDatePageState extends State<ChooseDatePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: Text('Select Date'),
+            SizedBox(height: 20), // Added for some spacing
+            Center(
+              child: ElevatedButton(
+                onPressed: () => _selectDate(context),
+                child: Text('Select Date'),
+              ),
             ),
-            if (selectedDate != null)
-              Text(
-                  'Selected Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}'),
-            SizedBox(height: 20),
             if (selectedDate != null) ...[
-              for (DateTime time in availableTimes)
-                ListTile(
-                  title: Text(
-                      '${time.toLocal().hour.toString().padLeft(2, '0')}:${time.toLocal().minute.toString().padLeft(2, '0')}'),
-                  leading: Radio<String>(
-                    value: DateFormat('HH:mm').format(time),
-                    groupValue: selectedTime,
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedTime = value;
-                      });
-                    },
+              if (availableTimes.isNotEmpty) ...[
+                for (DateTime time in availableTimes)
+                  ListTile(
+                    title: Text(
+                        '${time.toLocal().hour.toString().padLeft(2, '0')}:${time.toLocal().minute.toString().padLeft(2, '0')}'),
+                    leading: Radio<String>(
+                      value: DateFormat('HH:mm').format(time),
+                      groupValue: selectedTime,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedTime = value;
+                        });
+                      },
+                    ),
+                  ),
+              ] else ...[
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('No available slots',
+                        style: TextStyle(fontSize: 16, color: Colors.red)),
                   ),
                 ),
+              ],
             ],
           ],
         ),

@@ -71,13 +71,13 @@ class _ChooseBarberPageState extends State<ChooseBarberPage> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: Icon(Icons
-                      .favorite_border), // use `Icons.favorite` if favorite
-                  onPressed: () {
-                    // handle favorite action
-                  },
-                ),
+                // IconButton(
+                //   icon: Icon(Icons
+                //       .favorite_border), // use `Icons.favorite` if favorite
+                //   onPressed: () {
+                //     // handle favorite action
+                //   },
+                // ),
                 ElevatedButton(
                   onPressed: () {
                     // handle choosing barber
