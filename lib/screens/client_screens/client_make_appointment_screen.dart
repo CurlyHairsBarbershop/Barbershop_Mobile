@@ -21,6 +21,10 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Make appointment"),
+        automaticallyImplyLeading: false,
+      ),
       body: ListView(
         children: <Widget>[
           ListTile(
