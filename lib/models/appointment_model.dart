@@ -12,6 +12,17 @@ class Appointment {
       required this.appointmentTime,
       required this.services});
 
+    factory Appointment.fromJson(Map<String, dynamic> json) {
+    print(json);
+    return Appointment(
+      appointmentTime: json['at'],
+      barber: json['barberId'],
+      services: (json['serviceIds'] as List)
+          .map((review) => Service.fromJson(review))
+          .toList(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'at': appointmentTime.toString(),

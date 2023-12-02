@@ -6,6 +6,7 @@ import 'package:curly_hairs/models/register_model.dart';
 import 'package:curly_hairs/models/login_model.dart';
 import 'package:curly_hairs/models/user_model.dart';
 import 'package:curly_hairs/models/barber_model.dart';
+import 'package:curly_hairs/models/appointment_model.dart';
 import 'user_service.dart';
 
 class ApiService {
@@ -108,6 +109,56 @@ class ApiService {
     }
   }
 
+  static Future<List<Appointment>> getAllAppointments() async {
+    final url = Uri.parse('$baseUrl/appointments');
+
+    // Retrieve the token using the UserService
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      // Handle the case where the token is not available
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token', // Include the JWT token
+    };
+
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      List<Future<Appointment>> appointments = data.map((appointmentJson) {
+      // Extract service IDs from the appointment JSON
+      List<String> serviceIds = (appointmentJson['serviceIds'] as List).cast<String>();
+
+      // Fetch details for each service asynchronously
+      List<Future<Service>> serviceDetailsFutures = serviceIds
+          .map((serviceId) => ApiService.getServiceDetailsById(int.parse(serviceId)))
+          .toList();
+
+      return Future.wait(serviceDetailsFutures).then((serviceDetails) {
+        return Appointment.fromJson({
+          'at': appointmentJson['at'],
+          'barberId': appointmentJson['barberId'],
+          'services': serviceDetails.map((service) => service.toJson()).toList(),
+        });
+      });
+    }).toList();
+
+    // Wait for all appointment details to be fetched
+    return Future.wait(appointments);
+    } 
+    else {
+      throw Exception('Failed to fetch barbers');
+    }
+  }
+
   static Future<List<Service>> getAllServices() async {
     final response = await http.get(Uri.parse('$baseUrl/favors'));
 
@@ -119,6 +170,22 @@ class ApiService {
 
       return data.map((serviceJson) => Service.fromJson(serviceJson)).toList();
     } else {
+      throw Exception('Failed to fetch barbers');
+    }
+  }
+
+  static Future<Service> getServiceDetailsById(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/favors/$id'));
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(response.body);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      return data.map((serviceJson) => Service.fromJson(serviceJson)).toList()[0];
+    } 
+    else {
       throw Exception('Failed to fetch barbers');
     }
   }
