@@ -1,3 +1,4 @@
+import 'package:curly_hairs/screens/client_screens/client_edit_personal_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/user_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
@@ -17,11 +18,26 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         ApiService.getUserData(); // Fetch user data when the screen initializes
   }
 
+  void _navigateToEditScreen() {
+    // Navigate to the edit personal information screen
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => EditPersonalInfoScreen(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Personal Information'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: _navigateToEditScreen,
+            tooltip:
+                'Edit', // Optional: Shows text when user long-presses the button
+          ),
+        ],
       ),
       body: FutureBuilder<UserData>(
         future: _userDataFuture,
