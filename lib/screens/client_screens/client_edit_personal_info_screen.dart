@@ -51,9 +51,24 @@ class _EditPersonalInfoScreenState extends State<EditPersonalInfoScreen> {
                 '', // Provide phoneNumber or remove if not required for the update
           ),
         );
-        // If update is successful, you might want to show a success message or navigate away
+        // If update is successful, pop the current screen off the stack to return to the PersonalInfoScreen
+        Navigator.pop(context, true);
+        // Show a success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Information updated successfully'),
+            backgroundColor: Colors.green, // Green color for success
+          ),
+        );
       } catch (e) {
         // Handle error updating user info
+        // Show an error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update information'),
+            backgroundColor: Colors.red, // Red color for error
+          ),
+        );
       }
     }
   }
