@@ -147,6 +147,32 @@ class ApiService {
     }
   }
 
+static Future<void> postReview(Map<String, dynamic> review) async {
+    final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final body = json.encode(review);
+
+    final response = await http.post(Uri.parse('$baseUrl/barbers/comment'),
+        headers: headers, body: body);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    } else {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      throw Exception('Failed to post a review');
+    }
+  }
+
   static Future<void> postReply(Map<String, dynamic> reply) async {
     final token = await UserService.getToken();
     if (token == null) {

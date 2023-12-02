@@ -14,6 +14,68 @@ class BarberProfilePage extends StatefulWidget {
 }
 
 class _BarberProfilePageState extends State<BarberProfilePage> {
+  String reviewTitle = ''; // Declare reviewTitle variable
+
+  Future<void> _showReviewDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String reviewContent = '';
+
+        return AlertDialog(
+          title: Text('Write a Review'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                onChanged: (value) {
+                  reviewTitle = value; // Assign value to reviewTitle
+                },
+                decoration: InputDecoration(
+                  hintText: 'Review Title',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 10), // Add some space between title and content
+              TextFormField(
+                onChanged: (value) {
+                  reviewContent = value;
+                },
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: 'Type your review here...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Submit'),
+              onPressed: () async {
+                print('Title: $reviewTitle');
+                print('Review: $reviewContent');
+                // Call the API service method to post a review here
+                await ApiService.postReview({
+                  'title': reviewTitle,
+                  'content': reviewContent,
+                  'barberEmail': widget.barber.email,
+                  'rating' : 0,
+                  // Add other necessary fields for posting a review
+                });
+
+                // You might want to update the UI after posting the review
+                // For example, fetching updated barber data
+
+                Navigator.of(context).pop(); // To close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +102,17 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
             child: Text('Reviews', style: Theme.of(context).textTheme.headline6),
           ),
           for (var review in widget.barber.reviews)
-            ReviewWidget(review: review, barber: widget.barber,),
+            ReviewWidget(review: review, barber: widget.barber),
+          SizedBox(height: 20), // Add some space between reviews and the button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                _showReviewDialog(context);
+              },
+              child: Text('Write a Review'),
+            ),
+          ),
         ],
       ),
     );

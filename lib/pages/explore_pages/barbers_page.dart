@@ -3,7 +3,38 @@ import 'package:flutter/material.dart';
 import 'package:curly_hairs/pages/explore_pages/barber_profile_page.dart';
 import 'package:curly_hairs/models/barber_model.dart';
 
-class BarbersPage extends StatelessWidget {
+// class BarbersPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Barbers'),
+//       ),
+//       body: FutureBuilder<List<Barber>>(
+//         future: ApiService.getAllBarbers(),
+//         builder: (context, snapshot) {
+          
+//   }
+// }
+
+class BarbersPage extends StatefulWidget {
+  @override
+  _BarbersPageState createState() => _BarbersPageState();
+}
+
+class _BarbersPageState extends State<BarbersPage> {
+  late Future<List<Barber>> _barbersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBarbers();
+  }
+
+  Future<void> _fetchBarbers() async {
+    _barbersFuture = ApiService.getAllBarbers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +42,7 @@ class BarbersPage extends StatelessWidget {
         title: Text('Barbers'),
       ),
       body: FutureBuilder<List<Barber>>(
-        future: ApiService.getAllBarbers(),
+        future: _barbersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While waiting for the data to load, display a loading indicator.
