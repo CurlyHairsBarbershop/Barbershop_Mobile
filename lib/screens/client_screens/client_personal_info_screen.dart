@@ -1,3 +1,4 @@
+import 'package:curly_hairs/screens/client_screens/client_change_password_screen.dart';
 import 'package:curly_hairs/screens/client_screens/client_edit_personal_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/user_model.dart';
@@ -18,11 +19,30 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         ApiService.getUserData(); // Fetch user data when the screen initializes
   }
 
-  void _navigateToEditScreen() {
-    // Navigate to the edit personal information screen
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => EditPersonalInfoScreen(),
-    ));
+  void _refreshUserData() {
+    setState(() {
+      _userDataFuture = ApiService.getUserData();
+    });
+  }
+
+  void _navigateToEditScreen() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditPersonalInfoScreen(),
+      ),
+    );
+    // If the edit screen pops with a result, refresh the user data
+    if (result == true) {
+      _refreshUserData();
+    }
+  }
+
+  void _navigateToChangePasswordScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangePasswordScreen(),
+      ),
+    );
   }
 
   @override
@@ -30,14 +50,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Personal Information'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: _navigateToEditScreen,
-            tooltip:
-                'Edit', // Optional: Shows text when user long-presses the button
-          ),
-        ],
       ),
       body: FutureBuilder<UserData>(
         future: _userDataFuture,
@@ -67,6 +79,32 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                   SizedBox(height: 8),
                   // Text('Phone: ${userData.phoneNumber}',
                   //     style: TextStyle(fontSize: 18)),
+                  SizedBox(height: 24), // Add some space before the button
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.edit), // Icon for the edit button
+                    label: Text('Edit'), // Text for the edit button
+                    onPressed:
+                        _navigateToEditScreen, // Call the function to navigate to the edit screen
+                    style: ElevatedButton.styleFrom(
+                      // Optional styling
+                      primary: Colors.blue, // Background color
+                      onPrimary: Colors.white, // Text color
+                    ),
+                  ),
+
+                  SizedBox(height: 16), // Space between buttons
+
+                  // Change password button
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.lock_outline),
+                    label: Text('Change Password'),
+                    onPressed: _navigateToChangePasswordScreen,
+                    style: ElevatedButton.styleFrom(
+                      primary:
+                          Colors.deepOrange, // Different color to distinguish
+                      onPrimary: Colors.white,
+                    ),
+                  ),
                 ],
               ),
             );
