@@ -22,7 +22,7 @@ class ApiService {
     print("start request to db");
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       // Registration successful, store the token using the UserService
       final jsonResponse = jsonDecode(response.body);
       final token = jsonResponse['token'];
@@ -56,7 +56,7 @@ class ApiService {
 
     final response = await http.get(url, headers: headers);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       // Successful response, parse and use user data
       final jsonResponse = jsonDecode(response.body);
       final userData = UserData.fromJson(jsonResponse);
@@ -117,7 +117,7 @@ class ApiService {
   static Future<List<Barber>> getAllBarbers() async {
     final response = await http.get(Uri.parse('$baseUrl/barbers'));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final List<dynamic> data = json.decode(response.body);
 
       print('Response status: ${response.statusCode}');
@@ -132,7 +132,7 @@ class ApiService {
   static Future<List<Service>> getAllServices() async {
     final response = await http.get(Uri.parse('$baseUrl/favors'));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final List<dynamic> data = json.decode(response.body);
 
       print('Response status: ${response.statusCode}');
@@ -209,7 +209,7 @@ class ApiService {
     final response = await http.post(Uri.parse('$baseUrl/barbers/reply'),
         headers: headers, body: body);
 
-    if (response.statusCode == 202) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       //final List<dynamic> data = json.decode(response.body);
       //final jsonResponse = jsonDecode(response.body);
 
@@ -240,7 +240,7 @@ class ApiService {
     final response = await http.post(Uri.parse('$baseUrl/appointments'),
         headers: headers, body: body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       //final List<dynamic> data = json.decode(response.body);
       //final jsonResponse = jsonDecode(response.body);
 
