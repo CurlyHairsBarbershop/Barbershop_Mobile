@@ -80,7 +80,7 @@ class ApiService {
 
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 202) {
+    if (response.statusCode <= 300) {
       final jsonResponse = jsonDecode(response.body);
       final token = jsonResponse['token'];
 
@@ -136,18 +136,20 @@ class ApiService {
 
       List<Future<Appointment>> appointments = data.map((appointmentJson) {
       // Extract service IDs from the appointment JSON
-      List<String> serviceIds = (appointmentJson['serviceIds'] as List).cast<String>();
+      List<int> serviceIds = (appointmentJson['favors'] as List)
+      .map((favor) => favor['id'] as int)
+      .toList();
 
       // Fetch details for each service asynchronously
       List<Future<Service>> serviceDetailsFutures = serviceIds
-          .map((serviceId) => ApiService.getServiceDetailsById(int.parse(serviceId)))
+          .map((serviceId) => ApiService.getServiceDetailsById(serviceId))
           .toList();
 
       return Future.wait(serviceDetailsFutures).then((serviceDetails) {
         return Appointment.fromJson({
           'at': appointmentJson['at'],
-          'barberId': appointmentJson['barberId'],
-          'services': serviceDetails.map((service) => service.toJson()).toList(),
+          'barber': appointmentJson['barber'],
+          'favors': serviceDetails.map((service) => service.toJson()).toList(),
         });
       });
     }).toList();
@@ -179,12 +181,12 @@ class ApiService {
     final response = await http.get(Uri.parse('$baseUrl/favors/$id'));
 
     if (response.statusCode == 200) {
-      final dynamic data = json.decode(response.body);
+      final dynamic serviceJson = json.decode(response.body);
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
-      return data.map((serviceJson) => Service.fromJson(serviceJson)).toList()[0];
+      return Service.fromJson(serviceJson);
     } 
     else {
       throw Exception('Failed to fetch barbers');

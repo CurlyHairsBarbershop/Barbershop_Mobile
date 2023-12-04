@@ -8,27 +8,32 @@ class AppointmentHistoryScreen extends StatelessWidget {
     return FutureBuilder<List<Appointment>>(
       future: ApiService.getAllAppointments(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) 
-        {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           // Loading state
-          return CircularProgressIndicator(); // You can replace this with your loading indicator
-        } 
-        else if (snapshot.hasError) 
-        {
+          return Center(
+            child: CircularProgressIndicator(), // Replace this with your loading indicator
+          );
+        } else if (snapshot.hasError) {
           // Error state
           return Center(
-            child: Text('Error: ${snapshot.error}'),
+            child: Text(
+              'Error: ${snapshot.error}',
+              style: TextStyle(fontSize: 16, color: Colors.red),
+            ),
           );
-        } 
-        else if (!snapshot.hasData || snapshot.data!.isEmpty) 
-        {
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // No data state
           return Center(
-            child: Text('No appointments available.'),
+            child: Container(
+              color: Colors.grey[200], // Background color
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'No appointments available.',
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+            ),
           );
-        } 
-        else 
-        {
+        } else {
           List<Appointment> fetchedAppointments = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
@@ -39,14 +44,21 @@ class AppointmentHistoryScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final appointment = fetchedAppointments[index];
                 return ListTile(
-                  title: Text('Appointment Time: ${appointment.appointmentTime}'),
-                  subtitle: Text('Barber: ${appointment.barber?.toString()}' + '\nServices: ${appointment.services.map((s) => s.name).join(', ')}'),
+                  title: Text(
+                    'Appointment Time: ${appointment.appointmentTime}',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    'Barber: ${appointment.barber?.toString()}' +
+                        '\nServices: ${appointment.services.map((s) => s.name).join(', ')}',
+                    style: TextStyle(fontSize: 14),
+                  ),
                 );
-                  },
-                ),
-              );
+              },
+            ),
+          );
         }
-      }
+      },
     );
   }
 }

@@ -15,10 +15,10 @@ class Appointment {
     factory Appointment.fromJson(Map<String, dynamic> json) {
     print(json);
     return Appointment(
-      appointmentTime: json['at'],
-      barber: json['barberId'],
-      services: (json['serviceIds'] as List)
-          .map((review) => Service.fromJson(review))
+      appointmentTime: DateTime.parse(json['at']),
+      barber: Barber.fromJson(json['barber']),
+      services: (json['favors'] as List)
+          .map((service) => Service.fromJson(service))
           .toList(),
     );
   }
@@ -26,8 +26,8 @@ class Appointment {
   Map<String, dynamic> toJson() {
     return {
       'at': appointmentTime.toString(),
-      'barberId': barber!.id,
-      'serviceIds': services.map((service) => service.id).toList(),
+      'barber': barber,
+      'favors': services,
     };
   }
 }
