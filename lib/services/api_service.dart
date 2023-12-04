@@ -127,7 +127,8 @@ class ApiService {
 
     final response = await http.get(url, headers: headers);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200) 
+    {
       final List<dynamic> data = json.decode(response.body);
 
       print('Response status: ${response.statusCode}');
@@ -151,11 +152,11 @@ class ApiService {
       });
     }).toList();
 
-    // Wait for all appointment details to be fetched
     return Future.wait(appointments);
     } 
-    else {
-      throw Exception('Failed to fetch barbers');
+    else 
+    {
+      throw Exception('Failed to fetch appointments');
     }
   }
 
