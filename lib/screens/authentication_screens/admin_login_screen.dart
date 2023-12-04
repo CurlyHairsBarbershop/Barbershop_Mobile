@@ -1,3 +1,4 @@
+import 'package:curly_hairs/screens/admin_screens/admin_main_screen.dart';
 import 'package:curly_hairs/screens/client_screens/client_home_screen.dart';
 import 'package:curly_hairs/screens/client_screens/client_profile_screen.dart';
 import 'package:curly_hairs/services/user_service.dart';
@@ -52,27 +53,24 @@ class AdminLoginScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    LoginModel loginModel = LoginModel(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
-                    await ApiService.loginAdmin(loginModel);
+                  // if (_formKey.currentState!.validate()) {
+                  //   LoginModel loginModel = LoginModel(
+                  //     email: emailController.text,
+                  //     password: passwordController.text,
+                  //   );
+                  //   await ApiService.loginAdmin(loginModel);
 
-                    if (await UserService.getToken() != null) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => ClientHomeScreen(
-                                  initialTabIndex: 2,
-                                )),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text("Login failed. Please try again.")),
-                      );
-                    }
-                  }
+                  // if (await UserService.getToken() != null) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => AdminMainScreen()),
+                  );
+                  // } else {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(
+                  //         content: Text("Login failed. Please try again.")),
+                  //   );
+                  // }
+                  // }
                 },
                 child: Text("Login"),
               ),
