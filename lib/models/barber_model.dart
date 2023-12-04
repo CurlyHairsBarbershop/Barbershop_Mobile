@@ -47,11 +47,6 @@ class Barber extends UserData {
       'email': email,
       'firstName': name,
       'lastName': lastName,
-      'phoneNumber': phoneNumber,
-      'earnings': earnings,
-      'rating': rating,
-      'image': image,
-      'reviews': reviews.map((review) => review.toJson()).toList(),
     };
   }
 }

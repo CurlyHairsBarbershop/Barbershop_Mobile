@@ -168,7 +168,7 @@ class ApiService {
     }
   }
 
-static Future<void> postReview(Map<String, dynamic> review) async {
+  static Future<void> postReview(Map<String, dynamic> review) async {
     final token = await UserService.getToken();
     if (token == null) {
       throw Exception('Token not found');
@@ -251,6 +251,74 @@ static Future<void> postReview(Map<String, dynamic> review) async {
       print('Response body: ${response.body}');
 
       throw Exception('Failed to post an appointment');
+    }
+  }
+
+  static Future<void> addBarber(Barber barber) async {
+    final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final body = json.encode(barber.toJson());
+
+    final response = await http.post(Uri.parse('$baseUrl/barbers'),
+        headers: headers, body: body);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Barber added successfully');
+    } else {
+      print('Failed to add barber');
+      throw Exception('Failed to add barber');
+    }
+  }
+
+  /*static Future<void> editBarber(int id, Map<String, dynamic> barberData) async {
+    final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final body = json.encode(barberData);
+
+    final response = await http.put(Uri.parse('$baseUrl/barbers/$id'),
+        headers: headers, body: body);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Barber edited successfully');
+    } else {
+      print('Failed to edit barber');
+      throw Exception('Failed to edit barber');
+    }
+  }*/
+
+  static Future<void> deleteBarber(int id) async {
+    final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await http.delete(Uri.parse('$baseUrl/barbers/$id'),
+        headers: headers);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Barber deleted successfully');
+    } else {
+      print('Failed to delete barber');
+      throw Exception('Failed to delete barber');
     }
   }
 }
