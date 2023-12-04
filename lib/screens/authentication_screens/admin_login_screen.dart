@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/login_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
 
-class LoginScreen extends StatelessWidget {
+class AdminLoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = TextEditingController();
