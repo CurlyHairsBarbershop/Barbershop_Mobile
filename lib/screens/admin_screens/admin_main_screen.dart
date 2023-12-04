@@ -1,5 +1,6 @@
 // file: admin_main_screen.dart
 
+import 'package:curly_hairs/screens/admin_screens/admin_manage_barbers_screen.dart';
 import 'package:curly_hairs/screens/client_screens/client_personal_info_screen.dart';
 import 'package:curly_hairs/screens/guest_screens/guest_home_screen.dart';
 import 'package:curly_hairs/services/user_service.dart';
@@ -36,11 +37,11 @@ class AdminMainScreen extends StatelessWidget {
                 leading: Icon(Icons.content_cut),
                 title: Text('Manage Barbers'),
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => PersonalInfoScreen()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ManageBarbersScreen()),
+                  );
                 },
               ),
               ListTile(
