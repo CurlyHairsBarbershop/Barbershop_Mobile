@@ -16,10 +16,14 @@ class AppointmentHistoryScreen extends StatelessWidget {
         } else if (snapshot.hasError) {
           // Error state
           return Center(
-            child: Text(
-              'Error: ${snapshot.error}',
-              style: TextStyle(fontSize: 16, color: Colors.red),
-            ),
+            child: Container(
+              color: Colors.grey[200], // Background color
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
+              ),
+            )
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // No data state
@@ -29,7 +33,7 @@ class AppointmentHistoryScreen extends StatelessWidget {
               padding: EdgeInsets.all(16.0),
               child: Text(
                 'No appointments available.',
-                style: TextStyle(fontSize: 16, color: Colors.black54),
+                style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
               ),
             ),
           );
