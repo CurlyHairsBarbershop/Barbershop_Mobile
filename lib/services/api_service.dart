@@ -69,6 +69,7 @@ class ApiService {
   }
 
   static Future<void> loginUser(LoginModel loginModel) async {
+
     final url = Uri.parse('$baseUrl/account/login'); // Modify the URL as needed
 
     final headers = {
@@ -79,7 +80,7 @@ class ApiService {
 
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 202) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final jsonResponse = jsonDecode(response.body);
       final token = jsonResponse['token'];
 
@@ -90,6 +91,26 @@ class ApiService {
     } else {
       print('Login failed');
       // return false;
+    }
+  }
+
+  static Future<void> loginAdmin(LoginModel loginModel) async {
+    final url = Uri.parse('$baseUrl/admin/login'); 
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = jsonEncode(loginModel.toJson());
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final jsonResponse = jsonDecode(response.body);
+      final token = jsonResponse['token'];
+      await UserService.storeToken(token);
+
+    } else {
+      print('Login failed');
     }
   }
 
