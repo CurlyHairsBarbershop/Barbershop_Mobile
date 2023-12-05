@@ -36,9 +36,9 @@ class Review {
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'content': content,
       'rating': rating,
-      
+      'content': content,    
+      //'barberEmail': barberEmail,
     };
   }
 }

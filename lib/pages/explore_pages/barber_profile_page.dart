@@ -14,37 +14,128 @@ class BarberProfilePage extends StatefulWidget {
 }
 
 class _BarberProfilePageState extends State<BarberProfilePage> {
+  Barber? selectedBarber;
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.barber.name}\'s Profile'),
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: Text('Name'),
-            subtitle: Text(widget.barber.name + ' ' + widget.barber.lastName),
+  void initState() {
+    super.initState();
+    _fetchBarbers();
+  }
+
+  Future<void> _fetchBarbers() async {
+    List<Barber> allBarbers = await ApiService.getAllBarbers();
+    selectedBarber = allBarbers.firstWhere(
+      (barber) => barber.email == widget.barber.email,
+      orElse: () => widget.barber,
+    );
+    setState(() {}); // Update the UI after finding the barber
+  }
+  String reviewTitle = ''; // Declare reviewTitle variable
+
+  Future<void> _showReviewDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String reviewContent = '';
+
+        return AlertDialog(
+          title: Text('Write a Review'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                onChanged: (value) {
+                  reviewTitle = value; // Assign value to reviewTitle
+                },
+                decoration: InputDecoration(
+                  hintText: 'Review Title',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 10), // Add some space between title and content
+              TextFormField(
+                onChanged: (value) {
+                  reviewContent = value;
+                },
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: 'Type your review here...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
           ),
-          ListTile(
-            title: Text('Email'),
-            subtitle: Text(widget.barber.email),
-          ),
-          ListTile(
-            title: Text('Phone Number'),
-            subtitle: Text(widget.barber.phoneNumber),
-          ),
-          Divider(),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Reviews', style: Theme.of(context).textTheme.headline6),
-          ),
-          for (var review in widget.barber.reviews)
-            ReviewWidget(review: review, barber: widget.barber,),
-        ],
-      ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Submit'),
+              onPressed: () async {
+                print('Title: $reviewTitle');
+                print('Review: $reviewContent');
+                // Call the API service method to post a review here
+                await ApiService.postReview({
+                  'title': reviewTitle,
+                  'content': reviewContent,
+                  'barberEmail': widget.barber.email,
+                  'rating' : 0,
+                  // Add other necessary fields for posting a review
+                });
+
+                // You might want to update the UI after posting the review
+                // For example, fetching updated barber data
+
+                Navigator.of(context).pop(); // To close the dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
+
+  @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('${selectedBarber?.name ?? widget.barber.name}\'s Profile'),
+      // If selectedBarber is null, use the widget.barber.name instead
+    ),
+    body: selectedBarber == null
+        ? Center(child: CircularProgressIndicator())
+        : ListView(
+            children: [
+              ListTile(
+                title: Text('Name'),
+                subtitle: Text(selectedBarber!.name + ' ' + selectedBarber!.lastName),
+              ),
+              ListTile(
+                title: Text('Email'),
+                subtitle: Text(selectedBarber!.email),
+              ),
+              ListTile(
+                title: Text('Phone Number'),
+                subtitle: Text(selectedBarber!.phoneNumber),
+              ),
+              Divider(),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Reviews', style: Theme.of(context).textTheme.headline6),
+              ),
+              for (var review in selectedBarber!.reviews)
+                ReviewWidget(review: review, barber: selectedBarber!),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _showReviewDialog(context);
+                  },
+                  child: Text('Write a Review'),
+                ),
+              ),
+            ],
+          ),
+  );
+}
 }
 
 class ReviewWidget extends StatelessWidget {
