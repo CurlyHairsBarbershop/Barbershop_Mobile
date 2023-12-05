@@ -36,9 +36,9 @@ class Barber extends UserData {
       earnings: json['earnings'].toDouble(),
       rating: json['rating'].toDouble(),
       image: json['image'] ?? '',
-      reviews: (json['reviews'] as List)
-          .map((review) => Review.fromJson(review))
-          .toList(),
+      reviews: (json['reviews'] as List? ?? [])
+        .map((review) => Review.fromJson(review))
+        .toList(),
     );
   }
 

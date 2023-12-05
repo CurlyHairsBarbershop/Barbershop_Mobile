@@ -1,5 +1,6 @@
 // file: client_profile_screen.dart
 
+import 'package:curly_hairs/screens/client_screens/appointment_history_screen.dart';
 import 'package:curly_hairs/screens/client_screens/client_personal_info_screen.dart';
 import 'package:curly_hairs/screens/guest_screens/guest_home_screen.dart';
 import 'package:curly_hairs/services/user_service.dart';
@@ -30,7 +31,6 @@ class ClientProfileScreen extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => PersonalInfoScreen()),
                   );
-                  print('Personal Info Tapped'); // Placeholder action
                 },
               ),
               ListTile(
@@ -40,7 +40,7 @@ class ClientProfileScreen extends StatelessWidget {
                   await UserService.clearToken();
                   // for now, lets navigate to guest profile screen
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute( 
+                    MaterialPageRoute(
                         builder: (context) => GuestHomeScreen(
                               initialTabIndex: 1,
                             )),
@@ -49,6 +49,17 @@ class ClientProfileScreen extends StatelessWidget {
                   // Implement log-out functionality
                   // Example: context.read<AuthenticationService>().signOut();
                   print('Log Out Tapped'); // Placeholder action
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.history),
+                title: Text('Appointment History'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AppointmentHistoryScreen()),
+                  );
                 },
               ),
             ],
