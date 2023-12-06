@@ -18,16 +18,28 @@ class _ManageBarbersScreenState extends State<ManageBarbersScreen> {
     _barbersFuture = ApiService.getAllBarbers(); // Fetch the list of barbers
   }
 
-  void _navigateToAddBarberScreen() {
-    Navigator.of(context).push(
+  void _navigateToAddBarberScreen() async {
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => AddBarberScreen()),
     );
+    if (result == true) {
+      _refreshBarbersList();
+    }
   }
 
-  void _navigateToEditBarberScreen(Barber barber) {
-    Navigator.of(context).push(
+  void _navigateToEditBarberScreen(Barber barber) async {
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => EditBarberScreen(barber: barber)),
     );
+    if (result == true) {
+      _refreshBarbersList();
+    }
+  }
+
+  void _refreshBarbersList() {
+    setState(() {
+      _barbersFuture = ApiService.getAllBarbers();
+    });
   }
 
   @override

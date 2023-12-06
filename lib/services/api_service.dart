@@ -101,7 +101,6 @@ class ApiService {
       'Content-Type': 'application/json',
     };
     final body = jsonEncode(loginModel.toJson());
-
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {

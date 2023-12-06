@@ -51,8 +51,7 @@ class _EditBarberScreenState extends State<EditBarberScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Barber updated successfully')),
       );
-      // Optionally, navigate back to the previous screen
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update barber')),
