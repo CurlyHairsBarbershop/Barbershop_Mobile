@@ -182,19 +182,27 @@ class ApiService {
   }
 
   static Future<List<Service>> getAllServices() async {
-    final response = await http.get(Uri.parse('$baseUrl/favors'));
+  final response = await http.get(Uri.parse('$baseUrl/favors'));
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      final List<dynamic> data = json.decode(response.body);
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    final String responseBody = response.body;
+
+    if (responseBody.isNotEmpty) {
+      final List<dynamic> data = json.decode(responseBody);
 
       print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print('Response body: ${responseBody}');
 
       return data.map((serviceJson) => Service.fromJson(serviceJson)).toList();
     } else {
-      throw Exception('Failed to fetch barbers');
+      // Handle empty response body
+      throw Exception('Empty response body');
     }
+  } else {
+    throw Exception('Failed to fetch services. Status code: ${response.statusCode}');
   }
+}
+
 
   static Future<Service> getServiceDetailsById(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/favors/$id'));
