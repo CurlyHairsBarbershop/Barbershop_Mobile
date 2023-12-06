@@ -70,7 +70,6 @@ class ApiService {
   }
 
   static Future<void> loginUser(LoginModel loginModel) async {
-
     final url = Uri.parse('$baseUrl/account/login'); // Modify the URL as needed
 
     final headers = {
@@ -96,7 +95,7 @@ class ApiService {
   }
 
   static Future<void> loginAdmin(LoginModel loginModel) async {
-    final url = Uri.parse('$baseUrl/admin/login'); 
+    final url = Uri.parse('$baseUrl/admin/login');
 
     final headers = {
       'Content-Type': 'application/json',
@@ -109,7 +108,6 @@ class ApiService {
       final jsonResponse = jsonDecode(response.body);
       final token = jsonResponse['token'];
       await UserService.storeToken(token);
-
     } else {
       print('Login failed');
     }
@@ -148,37 +146,35 @@ class ApiService {
 
     final response = await http.get(url, headers: headers);
 
-    if (response.statusCode == 200) 
-    {
+    if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
       List<Future<Appointment>> appointments = data.map((appointmentJson) {
-      // Extract service IDs from the appointment JSON
-      List<int> serviceIds = (appointmentJson['favors'] as List)
-      .map((favor) => favor['id'] as int)
-      .toList();
+        // Extract service IDs from the appointment JSON
+        List<int> serviceIds = (appointmentJson['favors'] as List)
+            .map((favor) => favor['id'] as int)
+            .toList();
 
-      // Fetch details for each service asynchronously
-      List<Future<Service>> serviceDetailsFutures = serviceIds
-          .map((serviceId) => ApiService.getServiceDetailsById(serviceId))
-          .toList();
+        // Fetch details for each service asynchronously
+        List<Future<Service>> serviceDetailsFutures = serviceIds
+            .map((serviceId) => ApiService.getServiceDetailsById(serviceId))
+            .toList();
 
-      return Future.wait(serviceDetailsFutures).then((serviceDetails) {
-        return Appointment.fromJson({
-          'at': appointmentJson['at'],
-          'barber': appointmentJson['barber'],
-          'favors': serviceDetails.map((service) => service.toJson()).toList(),
+        return Future.wait(serviceDetailsFutures).then((serviceDetails) {
+          return Appointment.fromJson({
+            'at': appointmentJson['at'],
+            'barber': appointmentJson['barber'],
+            'favors':
+                serviceDetails.map((service) => service.toJson()).toList(),
+          });
         });
-      });
-    }).toList();
+      }).toList();
 
-    return Future.wait(appointments);
-    } 
-    else 
-    {
+      return Future.wait(appointments);
+    } else {
       throw Exception('Failed to fetch appointments');
     }
   }
@@ -208,8 +204,7 @@ class ApiService {
       print('Response body: ${response.body}');
 
       return Service.fromJson(serviceJson);
-    } 
-    else {
+    } else {
       throw Exception('Failed to fetch barbers');
     }
   }
@@ -381,14 +376,79 @@ class ApiService {
       'Authorization': 'Bearer $token',
     };
 
-    final response = await http.delete(Uri.parse('$baseUrl/barbers/$id'),
-        headers: headers);
+    final response =
+        await http.delete(Uri.parse('$baseUrl/barbers/$id'), headers: headers);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       print('Barber deleted successfully');
     } else {
       print('Failed to delete barber');
       throw Exception('Failed to delete barber');
+    }
+  }
+
+  static Future<void> updateClientInfo(UserData user) async {
+    final url = Uri.parse('$baseUrl/account');
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final body = jsonEncode({
+      'name': user.name,
+      'lastName': user.lastName,
+      // Include other fields as needed
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      // Update successful
+      print('Client info updated successfully');
+    } else {
+      // Handle failure
+      print(
+          'Failed to update client info: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to update client info');
+    }
+  }
+
+  static Future<bool> changePassword(
+      String currentPassword, String newPassword) async {
+    final url = Uri.parse('$baseUrl/account/password');
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final body = jsonEncode({
+      'currentPassword': currentPassword,
+      'newPassword': newPassword,
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      // Password change successful
+      print('Password changed successfully');
+      return true;
+    } else {
+      // Handle failure
+      print(
+          'Failed to change password: ${response.statusCode} - ${response.body}');
+      return false;
     }
   }
 }
