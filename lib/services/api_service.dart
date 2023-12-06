@@ -302,4 +302,69 @@ static Future<void> postReview(Map<String, dynamic> review) async {
       throw Exception('Failed to post an appointment');
     }
   }
+
+  static Future<void> updateClientInfo(UserData user) async {
+    final url = Uri.parse('$baseUrl/account');
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final body = jsonEncode({
+      'name': user.name,
+      'lastName': user.lastName,
+      // Include other fields as needed
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      // Update successful
+      print('Client info updated successfully');
+    } else {
+      // Handle failure
+      print(
+          'Failed to update client info: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to update client info');
+    }
+  }
+
+  static Future<bool> changePassword(
+      String currentPassword, String newPassword) async {
+    final url = Uri.parse('$baseUrl/account/password');
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final body = jsonEncode({
+      'currentPassword': currentPassword,
+      'newPassword': newPassword,
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      // Password change successful
+      print('Password changed successfully');
+      return true;
+    } else {
+      // Handle failure
+      print(
+          'Failed to change password: ${response.statusCode} - ${response.body}');
+      return false;
+    }
+  }
 }
