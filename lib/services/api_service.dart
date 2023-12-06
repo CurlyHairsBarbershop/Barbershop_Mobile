@@ -128,6 +128,71 @@ class ApiService {
     }
   }
 
+  static Future<bool> getIsBarberFavorite(int id) async {
+    final url = Uri.parse('$baseUrl/account/favourite-barbers');
+
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      // Handle the case where the token is not available
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token', // Include the JWT token
+    };
+
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final List<dynamic> data = json.decode(response.body);
+
+      return data.map((barberJson) => Barber.fromJson(barberJson)).map((x) => x.id).toList().contains(id);
+    } 
+    else 
+    {
+      throw Exception('Failed to fetch barbers');
+    }
+    
+  }
+
+  static Future<void> addBarberFavorite(int id) async {
+    final url = Uri.parse('$baseUrl/barbers/favourite/$id');
+
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      // Handle the case where the token is not available
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token', // Include the JWT token
+    };
+
+    final response = await http.patch(url, headers: headers);
+  }
+
+  static Future<void> deleteBarberFavorite(int id) async {
+    final url = Uri.parse('$baseUrl/barbers/favourite/$id');
+
+    final token = await UserService.getToken();
+
+    if (token == null) {
+      // Handle the case where the token is not available
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token', // Include the JWT token
+    };
+
+    final response = await http.delete(url, headers: headers);
+  }
+
   static Future<List<Appointment>> getAllAppointments() async {
     final url = Uri.parse('$baseUrl/appointments');
 

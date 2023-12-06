@@ -92,7 +92,7 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
     );
   }
 
-  @override
+@override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
@@ -101,41 +101,69 @@ Widget build(BuildContext context) {
     ),
     body: selectedBarber == null
         ? Center(child: CircularProgressIndicator())
-        : ListView(
-            children: [
-              ListTile(
-                title: Text('Name'),
-                subtitle: Text(selectedBarber!.name + ' ' + selectedBarber!.lastName),
-              ),
-              ListTile(
-                title: Text('Email'),
-                subtitle: Text(selectedBarber!.email),
-              ),
-              ListTile(
-                title: Text('Phone Number'),
-                subtitle: Text(selectedBarber!.phoneNumber),
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Reviews', style: Theme.of(context).textTheme.headline6),
-              ),
-              for (var review in selectedBarber!.reviews)
-                ReviewWidget(review: review, barber: selectedBarber!),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    _showReviewDialog(context);
-                  },
-                  child: Text('Write a Review'),
-                ),
-              ),
-            ],
+        : FutureBuilder<bool>(
+            future: ApiService.getIsBarberFavorite(widget.barber.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                bool isBarberFavorite = snapshot.data!;
+                return ListView(
+                  children: [
+                    ListTile(
+                      title: Text('Name'),
+                      subtitle: Text(selectedBarber!.name + ' ' + selectedBarber!.lastName),
+                    ),
+                    ListTile(
+                      title: Text('Email'),
+                      subtitle: Text(selectedBarber!.email),
+                    ),
+                    ListTile(
+                      title: Text('Phone Number'),
+                      subtitle: Text(selectedBarber!.phoneNumber),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Reviews', style: Theme.of(context).textTheme.headline6),
+                    ),
+                    for (var review in selectedBarber!.reviews)
+                      ReviewWidget(review: review, barber: selectedBarber!),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _showReviewDialog(context);
+                        },
+                        child: Text('Write a Review'),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        isBarberFavorite
+                            ? ApiService.deleteBarberFavorite(widget.barber.id)
+                            : ApiService.addBarberFavorite(widget.barber.id);
+                        setState(() {});
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: isBarberFavorite ? Colors.amber : Colors.grey[300],
+                        onPrimary: Colors.black,
+                      ),
+                      child: isBarberFavorite
+                          ? Text('Remove Favorite')
+                          : Text('Make Favorite'),
+                    ),
+                  ],
+                );
+              }
+            },
           ),
   );
 }
+
 }
 
 class ReviewWidget extends StatelessWidget {
