@@ -7,23 +7,27 @@ class Appointment {
   DateTime? appointmentTime;
   Barber? barber;
   List<Service> services;
+  bool cancelled;
 
   Appointment({
     required this.id,
-    required this.barber,
     required this.appointmentTime,
+    required this.barber,
     required this.services,
+    required this.cancelled,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Appointment(
       id: json['id'] as int,
-      appointmentTime: DateTime.parse(json['at']),
-      barber: Barber.fromJson(json['barber']),
+      appointmentTime:
+          json['at'] != null ? DateTime.parse(json['at'] as String) : null,
+      barber: Barber.fromJson(json['barber'] as Map<String, dynamic>),
       services: (json['favors'] as List)
-          .map((service) => Service.fromJson(service))
+          .map((serviceJson) =>
+              Service.fromJson(serviceJson as Map<String, dynamic>))
           .toList(),
+      cancelled: json['cancelled'] as bool,
     );
   }
 
@@ -31,8 +35,9 @@ class Appointment {
     return {
       'id': id,
       'at': appointmentTime?.toIso8601String(),
-      'barber': barber?.toJson(),
-      'favors': services.map((service) => service.toJson()).toList(),
+      'barberId': barber!.id,
+      'serviceIds': services.map((service) => service.id).toList(),
+      'cancelled': cancelled,
     };
   }
 }

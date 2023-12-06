@@ -62,13 +62,29 @@ class _ManageAppointmentsScreenState extends State<ManageAppointmentsScreen> {
                   Appointment appointment = snapshot.data![index];
                   return ListTile(
                     title: Text(
-                        'Appointment with ${appointment.barber?.name ?? "N/A"}'),
-                    subtitle: Text('Time: ${appointment.appointmentTime}'),
-                    trailing: IconButton(
-                      icon: Icon(Icons.cancel),
-                      onPressed: () => _cancelAppointment(appointment.id),
-                      color: Colors.red,
+                      'Appointment with ${appointment.barber?.name ?? "N/A"} and id ${appointment.id}',
+                      style: TextStyle(
+                        color:
+                            appointment.cancelled ? Colors.grey : Colors.black,
+                        decoration: appointment.cancelled
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
                     ),
+                    subtitle: Text(
+                      'Time: ${appointment.appointmentTime}',
+                      style: TextStyle(
+                        color:
+                            appointment.cancelled ? Colors.grey : Colors.black,
+                      ),
+                    ),
+                    trailing: appointment.cancelled
+                        ? null // Hide cancel button if appointment is cancelled
+                        : IconButton(
+                            icon: Icon(Icons.cancel),
+                            onPressed: () => _cancelAppointment(appointment.id),
+                            color: Colors.red,
+                          ),
                   );
                 },
               );

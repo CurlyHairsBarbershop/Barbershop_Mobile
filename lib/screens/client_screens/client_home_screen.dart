@@ -50,6 +50,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       barber: null,
       appointmentTime: null,
       services: [],
+      cancelled: false,
     );
 
     return appointment;
