@@ -23,7 +23,7 @@ class ApiService {
     print("start request to db");
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       // Registration successful, store the token using the UserService
       final jsonResponse = jsonDecode(response.body);
       final token = jsonResponse['token'];
@@ -57,7 +57,7 @@ class ApiService {
 
     final response = await http.get(url, headers: headers);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       // Successful response, parse and use user data
       final jsonResponse = jsonDecode(response.body);
       final userData = UserData.fromJson(jsonResponse);
@@ -118,7 +118,7 @@ class ApiService {
   static Future<List<Barber>> getAllBarbers() async {
     final response = await http.get(Uri.parse('$baseUrl/barbers'));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final List<dynamic> data = json.decode(response.body);
 
       print('Response status: ${response.statusCode}');
@@ -186,7 +186,7 @@ class ApiService {
   static Future<List<Service>> getAllServices() async {
     final response = await http.get(Uri.parse('$baseUrl/favors'));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final List<dynamic> data = json.decode(response.body);
 
       print('Response status: ${response.statusCode}');
@@ -238,7 +238,7 @@ class ApiService {
     }
   }
 
-static Future<void> postReview(Map<String, dynamic> review) async {
+  static Future<void> postReview(Map<String, dynamic> review) async {
     final token = await UserService.getToken();
     if (token == null) {
       throw Exception('Token not found');
@@ -279,7 +279,7 @@ static Future<void> postReview(Map<String, dynamic> review) async {
     final response = await http.post(Uri.parse('$baseUrl/barbers/reply'),
         headers: headers, body: body);
 
-    if (response.statusCode == 202) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       //final List<dynamic> data = json.decode(response.body);
       //final jsonResponse = jsonDecode(response.body);
 
@@ -310,7 +310,7 @@ static Future<void> postReview(Map<String, dynamic> review) async {
     final response = await http.post(Uri.parse('$baseUrl/appointments'),
         headers: headers, body: body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       //final List<dynamic> data = json.decode(response.body);
       //final jsonResponse = jsonDecode(response.body);
 
@@ -324,10 +324,8 @@ static Future<void> postReview(Map<String, dynamic> review) async {
     }
   }
 
-  static Future<void> updateClientInfo(UserData user) async {
-    final url = Uri.parse('$baseUrl/account');
+  static Future<void> addBarber(Barber barber) async {
     final token = await UserService.getToken();
-
     if (token == null) {
       throw Exception('Token not found');
     }
@@ -336,31 +334,44 @@ static Future<void> postReview(Map<String, dynamic> review) async {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    final body = json.encode(barber.toJson());
 
-    final body = jsonEncode({
-      'name': user.name,
-      'lastName': user.lastName,
-      // Include other fields as needed
-    });
+    final response = await http.post(Uri.parse('$baseUrl/barbers'),
+        headers: headers, body: body);
 
-    final response = await http.post(url, headers: headers, body: body);
-
-    if (response.statusCode == 200) {
-      // Update successful
-      print('Client info updated successfully');
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Barber added successfully');
     } else {
-      // Handle failure
-      print(
-          'Failed to update client info: ${response.statusCode} - ${response.body}');
-      throw Exception('Failed to update client info');
+      print('Failed to add barber');
+      throw Exception('Failed to add barber');
     }
   }
 
-  static Future<bool> changePassword(
-      String currentPassword, String newPassword) async {
-    final url = Uri.parse('$baseUrl/account/password');
+  /*static Future<void> editBarber(int id, Map<String, dynamic> barberData) async {
     final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
 
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final body = json.encode(barberData);
+
+    final response = await http.put(Uri.parse('$baseUrl/barbers/$id'),
+        headers: headers, body: body);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Barber edited successfully');
+    } else {
+      print('Failed to edit barber');
+      throw Exception('Failed to edit barber');
+    }
+  }*/
+
+  static Future<void> deleteBarber(int id) async {
+    final token = await UserService.getToken();
     if (token == null) {
       throw Exception('Token not found');
     }
@@ -370,22 +381,14 @@ static Future<void> postReview(Map<String, dynamic> review) async {
       'Authorization': 'Bearer $token',
     };
 
-    final body = jsonEncode({
-      'currentPassword': currentPassword,
-      'newPassword': newPassword,
-    });
+    final response = await http.delete(Uri.parse('$baseUrl/barbers/$id'),
+        headers: headers);
 
-    final response = await http.post(url, headers: headers, body: body);
-
-    if (response.statusCode == 200 || response.statusCode == 204) {
-      // Password change successful
-      print('Password changed successfully');
-      return true;
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Barber deleted successfully');
     } else {
-      // Handle failure
-      print(
-          'Failed to change password: ${response.statusCode} - ${response.body}');
-      return false;
+      print('Failed to delete barber');
+      throw Exception('Failed to delete barber');
     }
   }
 }
