@@ -1,5 +1,6 @@
 // file: guest_profile_screen.dart
 
+import 'package:curly_hairs/screens/authentication_screens/admin_login_screen.dart';
 import 'package:curly_hairs/screens/authentication_screens/login_screen.dart';
 import 'package:curly_hairs/screens/authentication_screens/register_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,16 @@ class GuestProfileScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.login),
+              title: Text('Log In As Administrator'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminLoginScreen()),
                 );
               },
             ),
