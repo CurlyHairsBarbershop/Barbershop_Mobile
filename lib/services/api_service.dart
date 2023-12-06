@@ -174,7 +174,9 @@ class ApiService {
       }).toList();
 
       return Future.wait(appointments);
-    } else {
+    } 
+    else 
+    {
       throw Exception('Failed to fetch appointments');
     }
   }

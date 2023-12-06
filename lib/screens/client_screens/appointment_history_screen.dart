@@ -14,8 +14,12 @@ class AppointmentHistoryScreen extends StatelessWidget {
             child: CircularProgressIndicator(), // Replace this with your loading indicator
           );
         } else if (snapshot.hasError) {
-          // Error state
-          return Center(
+  // Error state  
+        return Scaffold(
+          appBar: AppBar(
+              title: Text('Appointment History'),
+            ),
+          body: Center(
             child: Container(
               color: Colors.grey[200], // Background color
               padding: EdgeInsets.all(16.0),
@@ -23,17 +27,23 @@ class AppointmentHistoryScreen extends StatelessWidget {
                 'Error: ${snapshot.error}',
                 style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
               ),
-            )
-          );
+            ),
+          ),
+        );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // No data state
-          return Center(
-            child: Container(
-              color: Colors.grey[200], // Background color
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'No appointments available.',
-                style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Appointment History'),
+            ),
+            body: Center(
+              child: Container(
+                color: Colors.grey[200], // Background color
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'No appointments available.',
+                  style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
+                ),
               ),
             ),
           );
@@ -49,11 +59,11 @@ class AppointmentHistoryScreen extends StatelessWidget {
                 final appointment = fetchedAppointments[index];
                 return ListTile(
                   title: Text(
-                    'Appointment Time: ${appointment.appointmentTime}',
+                    'Appointment Time: ${appointment.appointmentTime?.toLocal()}',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    'Barber: ${appointment.barber?.toString()}' +
+                    'Barber: ${appointment.barber?.lastName}' + '${appointment.barber?.name}' +
                         '\nServices: ${appointment.services.map((s) => s.name).join(', ')}',
                     style: TextStyle(fontSize: 14),
                   ),
