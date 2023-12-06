@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:curly_hairs/screens/admin_screens/add_barber_screen.dart';
-import 'package:curly_hairs/screens/admin_screens/edit_barber_screen.dart';
+import 'package:curly_hairs/screens/admin_screens/barber/add_barber_screen.dart';
+import 'package:curly_hairs/screens/admin_screens/barber/edit_barber_screen.dart';
 
 class ManageBarbersScreen extends StatefulWidget {
   @override
