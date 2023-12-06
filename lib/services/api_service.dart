@@ -342,7 +342,8 @@ class ApiService {
     }
   }
 
-  /*static Future<void> editBarber(int id, Map<String, dynamic> barberData) async {
+  static Future<void> editBarber(
+      int id, Map<String, dynamic> barberData) async {
     final token = await UserService.getToken();
     if (token == null) {
       throw Exception('Token not found');
@@ -354,7 +355,7 @@ class ApiService {
     };
     final body = json.encode(barberData);
 
-    final response = await http.put(Uri.parse('$baseUrl/barbers/$id'),
+    final response = await http.patch(Uri.parse('$baseUrl/barbers/$id'),
         headers: headers, body: body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -363,7 +364,7 @@ class ApiService {
       print('Failed to edit barber');
       throw Exception('Failed to edit barber');
     }
-  }*/
+  }
 
   static Future<void> deleteBarber(int id) async {
     final token = await UserService.getToken();
