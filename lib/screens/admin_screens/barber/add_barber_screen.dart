@@ -49,12 +49,16 @@ class _AddBarberScreenState extends State<AddBarberScreen> {
       try {
         await ApiService.addBarber(newBarber);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Barber added successfully')),
+          SnackBar(
+              content: Text('Barber added successfully'),
+              backgroundColor: Colors.green),
         );
         Navigator.of(context).pop(true);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add barber')),
+          SnackBar(
+              content: Text('Failed to add barber'),
+              backgroundColor: Colors.red),
         );
       }
     }

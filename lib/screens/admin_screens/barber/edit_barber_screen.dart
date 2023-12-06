@@ -49,12 +49,16 @@ class _EditBarberScreenState extends State<EditBarberScreen> {
     try {
       await ApiService.editBarber(widget.barber.id, updatedData);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Barber updated successfully')),
+        SnackBar(
+            content: Text('Barber updated successfully'),
+            backgroundColor: Colors.green),
       );
       Navigator.of(context).pop(true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update barber')),
+        SnackBar(
+            content: Text('Failed to update barber'),
+            backgroundColor: Colors.red),
       );
     }
   }

@@ -17,6 +17,29 @@ class _ManageAppointmentsScreenState extends State<ManageAppointmentsScreen> {
     _appointmentsFuture = ApiService.getAllAppointments();
   }
 
+  Future<void> _cancelAppointment(int appointmentId) async {
+    try {
+      await ApiService.cancelAppointment(appointmentId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Appointment canceled successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      // To update the list after canceling an appointment
+      setState(() {
+        _appointmentsFuture = ApiService.getAllAppointments();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to cancel appointment'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +64,11 @@ class _ManageAppointmentsScreenState extends State<ManageAppointmentsScreen> {
                     title: Text(
                         'Appointment with ${appointment.barber?.name ?? "N/A"}'),
                     subtitle: Text('Time: ${appointment.appointmentTime}'),
-                    // Add more details as needed
+                    trailing: IconButton(
+                      icon: Icon(Icons.cancel),
+                      onPressed: () => _cancelAppointment(appointment.id),
+                      color: Colors.red,
+                    ),
                   );
                 },
               );

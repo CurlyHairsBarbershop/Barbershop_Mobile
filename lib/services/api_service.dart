@@ -318,6 +318,31 @@ class ApiService {
     }
   }
 
+  static Future<void> cancelAppointment(int appointmentId) async {
+    final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await http.patch(
+      Uri.parse('$baseUrl/appointments/cancel/$appointmentId'),
+      headers: headers,
+    );
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Appointment canceled successfully');
+    } else {
+      print(
+          'Failed to cancel appointment: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to cancel appointment');
+    }
+  }
+
   static Future<void> addBarber(Barber barber) async {
     final token = await UserService.getToken();
     if (token == null) {
@@ -361,6 +386,8 @@ class ApiService {
       print('Barber edited successfully');
     } else {
       print('Failed to edit barber');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
       throw Exception('Failed to edit barber');
     }
   }
