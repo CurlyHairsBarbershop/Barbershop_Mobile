@@ -344,7 +344,7 @@ class ApiService {
     }
   }
 
-  /*static Future<void> editBarber(int id, Map<String, dynamic> barberData) async {
+  static Future<void> editBarber(int id, Map<String, dynamic> barberData) async {
     final token = await UserService.getToken();
     if (token == null) {
       throw Exception('Token not found');
@@ -365,7 +365,7 @@ class ApiService {
       print('Failed to edit barber');
       throw Exception('Failed to edit barber');
     }
-  }*/
+  }
 
   static Future<void> deleteBarber(int id) async {
     final token = await UserService.getToken();
@@ -453,4 +453,71 @@ class ApiService {
       return false;
     }
   }
+
+  static Future<void> addService(Service service) async {
+  final token = await UserService.getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+
+  final headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+  final body = json.encode(service.toJson());
+
+  final response = await http.post(Uri.parse('$baseUrl/favours'),
+      headers: headers, body: body);
+
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    print('Service added successfully');
+  } else {
+    print('Failed to add service');
+    throw Exception('Failed to add service');
+  }
+}
+
+static Future<void> editService(int id, Service service) async {
+  final token = await UserService.getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+
+  final headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+  final body = json.encode(service.toJson());
+
+  final response = await http.patch(Uri.parse('$baseUrl/favours/$id'),
+      headers: headers, body: body);
+
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    print('Service edited successfully');
+  } else {
+    print('Failed to edit service');
+    throw Exception('Failed to edit service');
+  }
+}
+
+static Future<void> deleteService(int id) async {
+  final token = await UserService.getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+
+  final headers = {
+    'Authorization': 'Bearer $token',
+  };
+
+  final response = await http.delete(Uri.parse('$baseUrl/favours/$id'),
+      headers: headers);
+
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    print('Service deleted successfully');
+  } else {
+    print('Failed to delete service');
+    throw Exception('Failed to delete service');
+  }
+}
 }
