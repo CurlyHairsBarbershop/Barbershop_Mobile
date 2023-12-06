@@ -71,11 +71,9 @@ class ApiService {
 
   static Future<void> loginUser(LoginModel loginModel) async {
     final url = Uri.parse('$baseUrl/account/login'); // Modify the URL as needed
-
     final headers = {
       'Content-Type': 'application/json',
     };
-
     final body = jsonEncode(loginModel.toJson());
 
     final response = await http.post(url, headers: headers, body: body);
@@ -85,18 +83,13 @@ class ApiService {
       final token = jsonResponse['token'];
 
       await UserService.storeToken(token);
-      // return true;
-      // You can also return the token if needed
-      // return token;
     } else {
       print('Login failed');
-      // return false;
     }
   }
 
   static Future<void> loginAdmin(LoginModel loginModel) async {
     final url = Uri.parse('$baseUrl/admin/login');
-
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -109,6 +102,7 @@ class ApiService {
       final token = jsonResponse['token'];
       await UserService.storeToken(token);
     } else {
+      
       print('Login failed');
     }
   }
@@ -474,13 +468,15 @@ class ApiService {
   };
   final body = json.encode(service.toJson());
 
-  final response = await http.post(Uri.parse('$baseUrl/favours'),
+  final response = await http.post(Uri.parse('$baseUrl/favors'),
       headers: headers, body: body);
 
   if (response.statusCode >= 200 && response.statusCode < 300) {
     print('Service added successfully');
   } else {
     print('Failed to add service');
+    print('Response status: ${response.statusCode}');
+    print('Response status: ${response.body}');
     throw Exception('Failed to add service');
   }
 }
@@ -497,13 +493,15 @@ static Future<void> editService(int id, Service service) async {
   };
   final body = json.encode(service.toJson());
 
-  final response = await http.patch(Uri.parse('$baseUrl/favours/$id'),
+  final response = await http.put(Uri.parse('$baseUrl/favors/$id'),
       headers: headers, body: body);
 
   if (response.statusCode >= 200 && response.statusCode < 300) {
     print('Service edited successfully');
   } else {
     print('Failed to edit service');
+    print('Response status: ${response.statusCode}');
+    print('Response status: ${response.body}');
     throw Exception('Failed to edit service');
   }
 }
@@ -518,13 +516,15 @@ static Future<void> deleteService(int id) async {
     'Authorization': 'Bearer $token',
   };
 
-  final response = await http.delete(Uri.parse('$baseUrl/favours/$id'),
+  final response = await http.delete(Uri.parse('$baseUrl/favors/$id'),
       headers: headers);
 
   if (response.statusCode >= 200 && response.statusCode < 300) {
     print('Service deleted successfully');
   } else {
     print('Failed to delete service');
+    print('Response status: ${response.statusCode}');
+    print('Response status: ${response.body}');
     throw Exception('Failed to delete service');
   }
 }

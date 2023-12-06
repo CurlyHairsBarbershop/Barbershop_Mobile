@@ -53,24 +53,25 @@ class AdminLoginScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  // if (_formKey.currentState!.validate()) {
-                  //   LoginModel loginModel = LoginModel(
-                  //     email: emailController.text,
-                  //     password: passwordController.text,
-                  //   );
-                  //   await ApiService.loginAdmin(loginModel);
+                  if (_formKey.currentState!.validate()) {
+                    LoginModel loginModel = LoginModel(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    );
+                    await ApiService.loginAdmin(loginModel);
 
-                  // if (await UserService.getToken() != null) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => AdminMainScreen()),
-                  );
-                  // } else {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(
-                  //         content: Text("Login failed. Please try again.")),
-                  //   );
-                  // }
-                  // }
+                    if (await UserService.getToken() != null) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => AdminMainScreen()),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text("Login failed. Please try again.")),
+                      );
+                    }
+                  }
                 },
                 child: Text("Login"),
               ),
