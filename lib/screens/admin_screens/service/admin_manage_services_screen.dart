@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/service_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
-import 'package:curly_hairs/screens/admin_screens/edit_service_screen.dart';
-import 'package:curly_hairs/screens/admin_screens/add_service_screen.dart';
+import 'package:curly_hairs/screens/admin_screens/service/edit_service_screen.dart';
+import 'package:curly_hairs/screens/admin_screens/service/add_service_screen.dart';
 
 class ManageServicesScreen extends StatefulWidget {
   @override
@@ -38,7 +38,8 @@ class _ManageServicesScreenState extends State<ManageServicesScreen> {
 
   void _navigateToEditServiceScreen(Service service) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => EditServiceScreen(service: service)),
+      MaterialPageRoute(
+          builder: (context) => EditServiceScreen(service: service)),
     );
   }
 
