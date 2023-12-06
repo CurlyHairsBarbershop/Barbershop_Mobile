@@ -94,7 +94,6 @@ class ApiService {
       'Content-Type': 'application/json',
     };
     final body = jsonEncode(loginModel.toJson());
-
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -143,8 +142,10 @@ class ApiService {
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
 
+      print('----------------------------------------------');
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
+      print('----------------------------------------------');
 
       List<Future<Appointment>> appointments = data.map((appointmentJson) {
         // Extract service IDs from the appointment JSON
@@ -159,10 +160,12 @@ class ApiService {
 
         return Future.wait(serviceDetailsFutures).then((serviceDetails) {
           return Appointment.fromJson({
+            'id': appointmentJson['id'],
             'at': appointmentJson['at'],
             'barber': appointmentJson['barber'],
             'favors':
                 serviceDetails.map((service) => service.toJson()).toList(),
+            'cancelled': appointmentJson['cancelled']
           });
         });
       }).toList();
@@ -323,6 +326,33 @@ class ApiService {
     }
   }
 
+  static Future<void> cancelAppointment(int appointmentId) async {
+    final token = await UserService.getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    print("Appointment id to cancel: $appointmentId");
+
+    final response = await http.patch(
+      Uri.parse('$baseUrl/appointments/cancel/$appointmentId'),
+      headers: headers,
+    );
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Appointment canceled successfully');
+    } else {
+      print(
+          'Failed to cancel appointment: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to cancel appointment');
+    }
+  }
+
   static Future<void> addBarber(Barber barber) async {
     final token = await UserService.getToken();
     if (token == null) {
@@ -346,7 +376,8 @@ class ApiService {
     }
   }
 
-  static Future<void> editBarber(int id, Map<String, dynamic> barberData) async {
+  static Future<void> editBarber(
+      int id, Map<String, dynamic> barberData) async {
     final token = await UserService.getToken();
     if (token == null) {
       throw Exception('Token not found');
@@ -358,13 +389,15 @@ class ApiService {
     };
     final body = json.encode(barberData);
 
-    final response = await http.put(Uri.parse('$baseUrl/barbers/$id'),
+    final response = await http.patch(Uri.parse('$baseUrl/barbers/$id'),
         headers: headers, body: body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       print('Barber edited successfully');
     } else {
       print('Failed to edit barber');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
       throw Exception('Failed to edit barber');
     }
   }

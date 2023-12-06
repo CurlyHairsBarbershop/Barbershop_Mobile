@@ -46,9 +46,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   Future<Appointment> _initAppointment() async {
     Appointment appointment = Appointment(
+      id: 0,
       barber: null,
       appointmentTime: null,
       services: [],
+      cancelled: false,
     );
 
     return appointment;
