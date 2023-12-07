@@ -46,17 +46,6 @@ class ClientProfileScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.history),
-                title: Text('Appointment History'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AppointmentHistoryScreen()),
-                  );
-                },
-              ),
-              ListTile(
                 leading: Icon(Icons.favorite_border_outlined),
                 title: Text('Favorite Barbers'),
                 onTap: () {
