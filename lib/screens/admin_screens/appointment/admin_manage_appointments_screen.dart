@@ -62,7 +62,7 @@ class _ManageAppointmentsScreenState extends State<ManageAppointmentsScreen> {
                   Appointment appointment = snapshot.data![index];
                   return ListTile(
                     title: Text(
-                      'Appointment with ${appointment.barber?.name ?? "N/A"} and id ${appointment.id}',
+                      'Appointment with ${appointment.barber?.name ?? "N/A"}',
                       style: TextStyle(
                         color:
                             appointment.cancelled ? Colors.grey : Colors.black,
