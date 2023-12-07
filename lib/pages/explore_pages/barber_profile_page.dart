@@ -141,21 +141,30 @@ Widget build(BuildContext context) {
                         child: Text('Write a Review'),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        isBarberFavorite
-                            ? ApiService.deleteBarberFavorite(widget.barber.id)
-                            : ApiService.addBarberFavorite(widget.barber.id);
-                        setState(() {});
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: isBarberFavorite ? Colors.amber : Colors.grey[300],
-                        onPrimary: Colors.black,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // Toggle the favorite status based on current state
+                          if (isBarberFavorite) {
+                            await ApiService.deleteBarberFavorite(widget.barber.id);
+                          } else {
+                            await ApiService.addBarberFavorite(widget.barber.id);
+                          }
+                          // After the operation, fetch the new favorite status and update the UI
+                          setState(() {
+                            isBarberFavorite = !isBarberFavorite;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: isBarberFavorite ? Colors.amber : Colors.grey[300],
+                          onPrimary: Colors.black,
+                        ),
+                        child: isBarberFavorite
+                            ? Text('Remove Favorite')
+                            : Text('Make Favorite'),
                       ),
-                      child: isBarberFavorite
-                          ? Text('Remove Favorite')
-                          : Text('Make Favorite'),
-                    ),
+                    )
                   ],
                 );
               }
