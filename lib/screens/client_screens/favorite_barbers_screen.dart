@@ -60,7 +60,7 @@ class FavoriteBarbersScreen extends StatelessWidget {
                 final barber = fetchedBarbers[index];
                 return ListTile(
                   title: Text(
-                    '${barber.lastName}' + '${barber.name}',
+                    '${barber.lastName} ' + '${barber.name}',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
