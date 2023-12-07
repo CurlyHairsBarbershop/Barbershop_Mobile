@@ -46,24 +46,6 @@ class ClientProfileScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.exit_to_app),
-                title: Text('Log Out'),
-                onTap: () async {
-                  await UserService.clearToken();
-                  // for now, lets navigate to guest profile screen
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (context) => GuestHomeScreen(
-                              initialTabIndex: 1,
-                            )),
-                    (Route<dynamic> route) => false,
-                  );
-                  // Implement log-out functionality
-                  // Example: context.read<AuthenticationService>().signOut();
-                  print('Log Out Tapped'); // Placeholder action
-                },
-              ),
-              ListTile(
                 leading: Icon(Icons.history),
                 title: Text('Appointment History'),
                 onTap: () {
@@ -83,6 +65,24 @@ class ClientProfileScreen extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => FavoriteBarbersScreen()),
                   );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text('Log Out'),
+                onTap: () async {
+                  await UserService.clearToken();
+                  // for now, lets navigate to guest profile screen
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => GuestHomeScreen(
+                              initialTabIndex: 1,
+                            )),
+                    (Route<dynamic> route) => false,
+                  );
+                  // Implement log-out functionality
+                  // Example: context.read<AuthenticationService>().signOut();
+                  print('Log Out Tapped'); // Placeholder action
                 },
               ),
             ],
