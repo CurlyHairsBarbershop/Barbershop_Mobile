@@ -2,6 +2,7 @@
 
 import 'package:curly_hairs/screens/client_screens/appointment_history_screen.dart';
 import 'package:curly_hairs/screens/client_screens/client_personal_info_screen.dart';
+import 'package:curly_hairs/screens/client_screens/favorite_barbers_screen.dart';
 import 'package:curly_hairs/screens/guest_screens/guest_home_screen.dart';
 import 'package:curly_hairs/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,28 @@ class ClientProfileScreen extends StatelessWidget {
                   // Implement log-out functionality
                   // Example: context.read<AuthenticationService>().signOut();
                   print('Log Out Tapped'); // Placeholder action
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.history),
+                title: Text('Appointment History'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AppointmentHistoryScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.favorite_border_outlined),
+                title: Text('Favorite Barbers'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FavoriteBarbersScreen()),
+                  );
                 },
               ),
             ],

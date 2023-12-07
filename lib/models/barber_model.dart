@@ -27,16 +27,21 @@ class Barber extends UserData {
 
   factory Barber.fromJson(Map<String, dynamic> json) {
     print(json);
+    Map<String, dynamic> newJson = {};
+    json.forEach((key, value) {
+    String lowerCaseKey = key.toLowerCase();
+    newJson[lowerCaseKey] = value;
+  });
     return Barber(
-      id: json['id'],
-      email: json['email'],
-      name: json['name'],
-      lastName: json['lastName'],
-      phoneNumber: json['phoneNumber'] ?? '',
-      earnings: json['earnings'].toDouble(),
-      rating: json['rating'].toDouble(),
-      image: json['image'] ?? '',
-      reviews: (json['reviews'] as List? ?? [])
+      id: newJson['id'],
+      email: newJson['email'],
+      name: newJson['name'],
+      lastName: newJson['lastname'],
+      phoneNumber: newJson['phonenumber'] ?? '',
+      earnings: newJson['earnings'].toDouble(),
+      rating: newJson['rating'].toDouble(),
+      image: newJson['image'] ?? '',
+      reviews: (newJson['reviews'] as List? ?? [])
         .map((review) => Review.fromJson(review))
         .toList(),
     );
