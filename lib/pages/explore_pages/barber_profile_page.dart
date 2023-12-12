@@ -1,6 +1,7 @@
 import 'package:curly_hairs/models/reply_model.dart';
 import 'package:curly_hairs/models/review_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
+import 'package:curly_hairs/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/models/barber_model.dart';
 
@@ -92,6 +93,16 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
     );
   }
 
+Future<bool?> _fetchFavoriteBarbers() async {
+  String? token = await UserService.getToken();
+
+  if (token != null) {
+    return ApiService.getIsBarberFavorite(widget.barber.id);
+  } else {
+    return null;
+  }
+}
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -101,15 +112,15 @@ Widget build(BuildContext context) {
     ),
     body: selectedBarber == null
         ? Center(child: CircularProgressIndicator())
-        : FutureBuilder<bool>(
-            future: ApiService.getIsBarberFavorite(widget.barber.id),
+        : FutureBuilder<bool?>(
+            future: _fetchFavoriteBarbers(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
-                bool isBarberFavorite = snapshot.data!;
+                bool? isBarberFavorite = snapshot.data;
                 return ListView(
                   children: [
                     ListTile(
@@ -141,29 +152,32 @@ Widget build(BuildContext context) {
                         child: Text('Write a Review'),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          // Toggle the favorite status based on current state
-                          if (isBarberFavorite) {
-                            await ApiService.deleteBarberFavorite(widget.barber.id);
-                          } else {
-                            await ApiService.addBarberFavorite(widget.barber.id);
-                          }
-                          // After the operation, fetch the new favorite status and update the UI
-                          setState(() {
-                            isBarberFavorite = !isBarberFavorite;
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: isBarberFavorite ? Colors.amber : Colors.grey[300],
-                          onPrimary: Colors.black,
+                      Visibility(
+                        visible: isBarberFavorite != null,
+                        child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            // Toggle the favorite status based on current state
+                            if (isBarberFavorite!) {
+                              await ApiService.deleteBarberFavorite(widget.barber.id);
+                            } else {
+                              await ApiService.addBarberFavorite(widget.barber.id);
+                            }
+                            // After the operation, fetch the new favorite status and update the UI
+                            setState(() {
+                              isBarberFavorite = !isBarberFavorite!;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: isBarberFavorite ?? false ? Colors.amber : Colors.grey[300],
+                            onPrimary: Colors.black,
+                          ),
+                          child: isBarberFavorite ?? false
+                              ? Text('Remove Favorite')
+                              : Text('Make Favorite'),
                         ),
-                        child: isBarberFavorite
-                            ? Text('Remove Favorite')
-                            : Text('Make Favorite'),
-                      ),
+                      )
                     )
                   ],
                 );
