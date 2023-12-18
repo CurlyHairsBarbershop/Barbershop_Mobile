@@ -6,6 +6,9 @@ import 'package:curly_hairs/pages/make_appointment_pages/choose_date_page.dart';
 import 'package:curly_hairs/models/appointment_model.dart';
 import 'package:curly_hairs/models/barber_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
+import 'dart:typed_data';
+import 'dart:convert';
+
 
 class ChooseBarberPage extends StatefulWidget {
   final Appointment appointment;
@@ -62,9 +65,11 @@ class _ChooseBarberPageState extends State<ChooseBarberPage> {
         itemCount: barbers.length,
         itemBuilder: (context, index) {
           Barber barber = barbers[index];
+          Uint8List imageBytes = base64.decode(barber.image ?? '');
+
           return ListTile(
             leading: CircleAvatar(
-              child: Icon(Icons.person), // replace with barber image
+              backgroundImage: MemoryImage(imageBytes),
             ),
             title: Text(barber.name), // replace with barber name
             subtitle: Text('Available schedule...'), // replace with schedule

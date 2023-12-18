@@ -2,6 +2,8 @@ import 'package:curly_hairs/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/pages/explore_pages/barber_profile_page.dart';
 import 'package:curly_hairs/models/barber_model.dart';
+import 'dart:typed_data';
+import 'dart:convert';
 
 // class BarbersPage extends StatelessWidget {
 //   @override
@@ -70,7 +72,9 @@ class _BarbersPageState extends State<BarbersPage> {
                     );
                   },
                   child: ListTile(
-                    leading: Icon(Icons.image), // replace with your image
+                    leading: CircleAvatar(
+                     backgroundImage: MemoryImage(base64.decode(barber.image ?? '')),
+                    ), // replace with your image
                     title: Text('${barber.name} ${barber.lastName}'),
                   ),
                 );

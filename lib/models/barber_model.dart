@@ -40,7 +40,7 @@ class Barber extends UserData {
       phoneNumber: newJson['phonenumber'] ?? '',
       earnings: newJson['earnings'].toDouble(),
       rating: newJson['rating'].toDouble(),
-      image: newJson['image'] ?? '',
+      image: newJson['imageurl'] ?? 'huy',
       reviews: (newJson['reviews'] as List? ?? [])
         .map((review) => Review.fromJson(review))
         .toList(),

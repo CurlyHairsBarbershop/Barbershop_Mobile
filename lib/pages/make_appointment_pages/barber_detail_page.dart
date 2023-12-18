@@ -3,6 +3,8 @@ import 'package:curly_hairs/models/review_model.dart';
 import 'package:curly_hairs/pages/make_appointment_pages/comment_page.dart';
 import 'package:curly_hairs/models/barber_model.dart';
 import 'package:curly_hairs/services/api_service.dart';
+import 'dart:typed_data';
+import 'dart:convert';
 
 class BarberDetailPage extends StatefulWidget {
   final Barber barber;
@@ -42,10 +44,34 @@ class _BarberDetailPageState extends State<BarberDetailPage> {
       ),
       body: ListView(
         children: <Widget>[
-          ListTile(
-            leading: CircleAvatar(
-              child: Icon(Icons.person), // replace with barber image
+          Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as needed
+              child: FractionallySizedBox(
+                widthFactor: 0.32, // Set the width to 30% of the available screen width
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        const Color.fromARGB(255, 113, 185, 243),
+                        const Color.fromARGB(255, 255, 106, 106),
+                      ], // Adjust colors as needed
+                    ),
+                  ),
+                  child: FractionallySizedBox(
+                    heightFactor: 0.96,
+                    child: Image.memory(
+                      base64.decode(widget.barber.image ?? ''),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
             ),
+          ),
+          ListTile(
             title: Text(widget.barber.name), // replace with barber name
             subtitle: Text('Available schedule...'), // replace with schedule
           ),

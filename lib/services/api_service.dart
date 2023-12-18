@@ -115,7 +115,8 @@ class ApiService {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
-      return data.map((barberJson) => Barber.fromJson(barberJson)).toList();
+      List<Barber> result = data.map((barberJson) => Barber.fromJson(barberJson)).toList();
+      return result;
     } else {
       throw Exception('Failed to fetch barbers');
     }
