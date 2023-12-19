@@ -159,9 +159,6 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
                         child: Text('Reviews',
                             style: Theme.of(context).textTheme.headline6),
                       ),
-                      for (var review in selectedBarber!.reviews)
-                        ReviewWidget(review: review, barber: selectedBarber!),
-                      SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
@@ -200,7 +197,10 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
                                   ? Text('Remove Favorite')
                                   : Text('Make Favorite'),
                             ),
-                          ))
+                          )),
+                      for (var review in selectedBarber!.reviews)
+                        ReviewWidget(review: review, barber: selectedBarber!),
+                      SizedBox(height: 20),
                     ],
                   );
                 }

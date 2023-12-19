@@ -132,9 +132,6 @@ class _BarberProfileGuestPageState extends State<BarberProfileGuestPage> {
                   child: Text('Reviews',
                       style: Theme.of(context).textTheme.headline6),
                 ),
-                for (var review in selectedBarber!.reviews)
-                  ReviewWidget(review: review, barber: selectedBarber!),
-                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Builder(
@@ -159,6 +156,9 @@ class _BarberProfileGuestPageState extends State<BarberProfileGuestPage> {
                     },
                   ),
                 ),
+                for (var review in selectedBarber!.reviews)
+                  ReviewWidget(review: review, barber: selectedBarber!),
+                SizedBox(height: 20),
               ],
             ),
     );
