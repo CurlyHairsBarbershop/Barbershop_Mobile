@@ -1,23 +1,11 @@
-import 'package:curly_hairs/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:curly_hairs/services/api_service.dart';
+import 'package:curly_hairs/services/user_service.dart';
 import 'package:curly_hairs/pages/explore_pages/barber_profile_page.dart';
 import 'package:curly_hairs/models/barber_model.dart';
+import 'package:curly_hairs/pages/explore_pages/barber_profile_guest_page.dart';
 import 'dart:typed_data';
 import 'dart:convert';
-
-// class BarbersPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Barbers'),
-//       ),
-//       body: FutureBuilder<List<Barber>>(
-//         future: ApiService.getAllBarbers(),
-//         builder: (context, snapshot) {
-          
-//   }
-// }
 
 class BarbersPage extends StatefulWidget {
   @override
@@ -63,18 +51,31 @@ class _BarbersPageState extends State<BarbersPage> {
               itemBuilder: (context, index) {
                 Barber barber = barbers[index];
                 return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BarberProfilePage(barber: barber), // Pass the reviews here
-                      ),
-                    );
+                  onTap: () async {
+                    String? token = await UserService.getToken();
+                    if (token != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BarberProfilePage(barber: barber),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BarberProfileGuestPage(barber: barber),
+                        ),
+                      );
+                    }
                   },
                   child: ListTile(
                     leading: CircleAvatar(
-                     backgroundImage: MemoryImage(base64.decode(barber.image ?? '')),
-                    ), // replace with your image
+                      backgroundImage:
+                          MemoryImage(base64.decode(barber.image ?? '')),
+                    ),
                     title: Text('${barber.name} ${barber.lastName}'),
                   ),
                 );
