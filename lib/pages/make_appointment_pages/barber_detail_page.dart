@@ -46,9 +46,11 @@ class _BarberDetailPageState extends State<BarberDetailPage> {
         children: <Widget>[
           Container(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as needed
+              borderRadius: BorderRadius.circular(
+                  8.0), // Adjust the border radius as needed
               child: FractionallySizedBox(
-                widthFactor: 0.32, // Set the width to 30% of the available screen width
+                widthFactor:
+                    0.32, // Set the width to 30% of the available screen width
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(

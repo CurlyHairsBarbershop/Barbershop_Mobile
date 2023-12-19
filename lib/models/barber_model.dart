@@ -29,9 +29,9 @@ class Barber extends UserData {
     print(json);
     Map<String, dynamic> newJson = {};
     json.forEach((key, value) {
-    String lowerCaseKey = key.toLowerCase();
-    newJson[lowerCaseKey] = value;
-  });
+      String lowerCaseKey = key.toLowerCase();
+      newJson[lowerCaseKey] = value;
+    });
     return Barber(
       id: newJson['id'],
       email: newJson['email'],
@@ -40,10 +40,10 @@ class Barber extends UserData {
       phoneNumber: newJson['phonenumber'] ?? '',
       earnings: newJson['earnings'].toDouble(),
       rating: newJson['rating'].toDouble(),
-      image: newJson['imageurl'] ?? 'huy',
+      image: newJson['imageurl'] ?? '',
       reviews: (newJson['reviews'] as List? ?? [])
-        .map((review) => Review.fromJson(review))
-        .toList(),
+          .map((review) => Review.fromJson(review))
+          .toList(),
     );
   }
 

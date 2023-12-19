@@ -9,7 +9,6 @@ import 'package:curly_hairs/services/api_service.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 
-
 class ChooseBarberPage extends StatefulWidget {
   final Appointment appointment;
 
@@ -76,13 +75,6 @@ class _ChooseBarberPageState extends State<ChooseBarberPage> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // IconButton(
-                //   icon: Icon(Icons
-                //       .favorite_border), // use `Icons.favorite` if favorite
-                //   onPressed: () {
-                //     // handle favorite action
-                //   },
-                // ),
                 ElevatedButton(
                   onPressed: () {
                     // handle choosing barber
@@ -106,22 +98,6 @@ class _ChooseBarberPageState extends State<ChooseBarberPage> {
           );
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     print("d ${widget.appointment.barber?.name}");
-      //     if (widget.appointment.barber != null) {
-      //       navigateToChooseDatePage();
-      //     } else {
-      //       ScaffoldMessenger.of(context).showSnackBar(
-      //         SnackBar(
-      //           content: Text('Please choose a barber.'),
-      //           duration: Duration(seconds: 2),
-      //         ),
-      //       );
-      //     }
-      //   },
-      //   child: Icon(Icons.arrow_forward),
-      // ),
     );
   }
 }

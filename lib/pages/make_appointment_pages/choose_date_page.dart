@@ -1,8 +1,8 @@
-import 'package:curly_hairs/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:curly_hairs/pages/make_appointment_pages/choose_service_page.dart';
 import 'package:curly_hairs/models/appointment_model.dart';
+import 'package:curly_hairs/services/api_service.dart';
+import 'package:curly_hairs/pages/make_appointment_pages/choose_service_page.dart';
 
 class ChooseDatePage extends StatefulWidget {
   final Appointment appointment;
@@ -16,53 +16,37 @@ class ChooseDatePage extends StatefulWidget {
 class _ChooseDatePageState extends State<ChooseDatePage> {
   DateTime? selectedDate;
   String? selectedTime;
+  List<DateTime> availableTimes = [];
 
   Future<void> fetchSchedule() async {
+    if (selectedDate == null) return; // Ensure a date is selected
+
     int barberID = widget.appointment.barber?.id ?? 0;
-    List<DateTime> busyTimes = [];
     try {
       // Fetch busy times from the API
-      busyTimes = await ApiService.getAllDateTime(
+      List<DateTime> busyTimes = await ApiService.getAllDateTime(
           barberID, selectedDate!.day - DateTime.now().day);
 
-      print(busyTimes);
+      // Create all potential time slots
+      List<DateTime> allTimes = List.generate(10, (i) {
+        return DateTime(
+            selectedDate!.year, selectedDate!.month, selectedDate!.day, i + 9);
+      });
+
+      // Filter out busy and past times
+      DateTime now = DateTime.now();
+      setState(() {
+        availableTimes.clear(); // Clear previous times
+        availableTimes = allTimes.where((slot) {
+          return !busyTimes.contains(slot) && slot.isAfter(now);
+        }).toList();
+      });
     } catch (error) {
-      print(error);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to fetch busy times.')),
       );
     }
-
-    // Get the current time
-    DateTime now = DateTime.now();
-
-    // Assuming barber works from 09:00 to 19:00, create all time slots
-    List<DateTime> allTimes = List.generate(10, (i) {
-      DateTime time = DateTime(
-          selectedDate!.year, selectedDate!.month, selectedDate!.day, i + 9);
-      return time.toLocal();
-    });
-
-    print(allTimes);
-
-    // Filter out busy times and past times
-    setState(() {
-      availableTimes.clear(); // Clear previous times
-      for (var slot in allTimes) {
-        if (busyTimes.any((time) =>
-            slot.compareTo(time.add(Duration(hours: 1))) < 0 &&
-            slot.compareTo(time) >= 0)) {
-          continue;
-        }
-        // Add to available times only if it's in the future
-        if (slot.isAfter(now)) {
-          availableTimes.add(slot);
-        }
-      }
-    });
   }
-
-  List<DateTime> availableTimes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -74,35 +58,50 @@ class _ChooseDatePageState extends State<ChooseDatePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20), // Added for some spacing
+            SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () => _selectDate(context),
-                child: Text('Select Date'),
+                child: Text(selectedDate == null
+                    ? 'Select Date'
+                    : DateFormat('EEEE, MMMM d, yyyy').format(selectedDate!)),
               ),
             ),
+            SizedBox(height: 20),
             if (selectedDate != null) ...[
+              Center(
+                child: Text(
+                  'Available Times:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
               if (availableTimes.isNotEmpty) ...[
                 for (DateTime time in availableTimes)
-                  ListTile(
-                    title: Text(
-                        '${time.toLocal().hour.toString().padLeft(2, '0')}:${time.toLocal().minute.toString().padLeft(2, '0')}'),
-                    leading: Radio<String>(
-                      value: DateFormat('HH:mm').format(time),
-                      groupValue: selectedTime,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedTime = value;
-                        });
-                      },
+                  Card(
+                    margin: EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: Text(
+                        DateFormat('hh:mm a').format(time),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      leading: Radio<String>(
+                        value: DateFormat('HH:mm').format(time),
+                        groupValue: selectedTime,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedTime = value;
+                          });
+                        },
+                      ),
                     ),
                   ),
               ] else ...[
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
                     child: Text('No available slots',
-                        style: TextStyle(fontSize: 16, color: Colors.red)),
+                        style:
+                            TextStyle(fontSize: 16, color: Colors.redAccent)),
                   ),
                 ),
               ],
@@ -139,13 +138,14 @@ class _ChooseDatePageState extends State<ChooseDatePage> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: 30)),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+        selectedTime = null; // Reset the time selection
       });
       fetchSchedule();
     }

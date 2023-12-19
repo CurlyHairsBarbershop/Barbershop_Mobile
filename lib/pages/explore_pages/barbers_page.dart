@@ -1,23 +1,9 @@
-import 'package:curly_hairs/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:curly_hairs/services/api_service.dart';
 import 'package:curly_hairs/pages/explore_pages/barber_profile_page.dart';
 import 'package:curly_hairs/models/barber_model.dart';
 import 'dart:typed_data';
 import 'dart:convert';
-
-// class BarbersPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Barbers'),
-//       ),
-//       body: FutureBuilder<List<Barber>>(
-//         future: ApiService.getAllBarbers(),
-//         builder: (context, snapshot) {
-          
-//   }
-// }
 
 class BarbersPage extends StatefulWidget {
   @override
@@ -47,35 +33,36 @@ class _BarbersPageState extends State<BarbersPage> {
         future: _barbersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // While waiting for the data to load, display a loading indicator.
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            // If there's an error, display an error message.
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
-            // If no data is available, display a message indicating no barbers found.
-            return Text('No barbers found.');
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No barbers found.'));
           } else {
-            // Data has been loaded successfully. Display the list of barbers.
-            List<Barber> barbers = snapshot.data ?? [];
+            List<Barber> barbers = snapshot.data!;
             return ListView.builder(
               itemCount: barbers.length,
               itemBuilder: (context, index) {
                 Barber barber = barbers[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BarberProfilePage(barber: barber), // Pass the reviews here
-                      ),
-                    );
-                  },
+                return Card(
+                  elevation: 4.0,
+                  margin: EdgeInsets.all(8.0),
+                  color: Colors.blue[100],
                   child: ListTile(
                     leading: CircleAvatar(
-                     backgroundImage: MemoryImage(base64.decode(barber.image ?? '')),
-                    ), // replace with your image
+                      backgroundImage:
+                          MemoryImage(base64.decode(barber.image ?? '')),
+                    ),
                     title: Text('${barber.name} ${barber.lastName}'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BarberProfilePage(barber: barber),
+                        ),
+                      );
+                    },
                   ),
                 );
               },

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/services/api_service.dart';
 import 'package:curly_hairs/models/service_model.dart';
@@ -20,28 +18,39 @@ class _ServicesPageState extends State<ServicesPage> {
         future: ApiService.getAllServices(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // While waiting for the data to load, display a loading indicator.
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            // If there's an error, display an error message.
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
-            // If no data is available, display a message indicating no barbers found.
-            return Text('No barbers found.');
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No services found.'));
           } else {
-            // Data has been loaded successfully. Display the list of barbers.
-            List<Service> services = snapshot.data ?? [];
+            List<Service> services = snapshot.data!;
             return ListView.builder(
               itemCount: services.length,
               itemBuilder: (context, index) {
                 Service service = services[index];
-                return GestureDetector(
-                  
+                return Card(
+                  elevation: 4.0,
+                  margin: EdgeInsets.all(8.0),
+                  color:
+                      Colors.blue[100], // Light grey color for card background
                   child: ListTile(
-                    leading: Icon(Icons.image), // replace with your image
-                    title: Text('${service.name}'),
-                    subtitle: Text(
-                '\$${service.cost.toStringAsFixed(2)}\nDescription: ${service.description}'),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                    title: Text(service.name,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('\$${service.cost.toStringAsFixed(2)}',
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold)),
+                        SizedBox(height: 5),
+                        Text(service.description),
+                      ],
+                    ),
+                    // Optionally, add an onTap event or other widgets
                   ),
                 );
               },

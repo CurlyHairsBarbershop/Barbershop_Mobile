@@ -13,6 +13,14 @@ class AboutUsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Center(
+                child: Image.asset(
+                  'assets/logo.png',
+                  width: 100,
+                  height: 100,
+                ),
+              ),
+              SizedBox(height: 10),
               Text(
                 'Welcome to CurlyHairs - Your Ultimate Barbershop Destination!',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
