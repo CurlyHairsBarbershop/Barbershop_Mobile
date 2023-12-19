@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:curly_hairs/services/api_service.dart';
+import 'package:curly_hairs/services/user_service.dart';
 import 'package:curly_hairs/pages/explore_pages/barber_profile_page.dart';
 import 'package:curly_hairs/models/barber_model.dart';
+import 'package:curly_hairs/pages/explore_pages/barber_profile_guest_page.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 
@@ -44,17 +46,11 @@ class _BarbersPageState extends State<BarbersPage> {
               itemCount: barbers.length,
               itemBuilder: (context, index) {
                 Barber barber = barbers[index];
-                return Card(
-                  elevation: 4.0,
-                  margin: EdgeInsets.all(8.0),
-                  color: Colors.blue[100],
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          MemoryImage(base64.decode(barber.image ?? '')),
-                    ),
-                    title: Text('${barber.name} ${barber.lastName}'),
-                    onTap: () {
+                return GestureDetector(
+                  
+                  onTap: () async {
+                    String? token = await UserService.getToken();
+                    if (token != null) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -62,7 +58,22 @@ class _BarbersPageState extends State<BarbersPage> {
                               BarberProfilePage(barber: barber),
                         ),
                       );
-                    },
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BarberProfileGuestPage(barber: barber),
+                        ),
+                      );
+                    }
+                  },
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          MemoryImage(base64.decode(barber.image ?? '')),
+                    ),
+                    title: Text('${barber.name} ${barber.lastName}'),
                   ),
                 );
               },
